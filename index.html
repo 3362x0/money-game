@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+<title>小小換錢王 💰</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --orange:#FF6B35; --teal:#4ECDC4; --yellow:#FFD93D;
+  --green:#6BCB77;  --red:#FF6B6B;  --purple:#9B5DE5;
+  --indigo:#4F46E5; --text:#2D3436; --muted:#636e72;
+  --white:#FFFFFF;
+  --shadow:0 6px 24px rgba(0,0,0,0.14);
+  --shadow-sm:0 3px 12px rgba(0,0,0,0.09);
+  --radius:22px; --radius-sm:12px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{
+  font-family:'Nunito','Noto Sans TC',sans-serif;
+  background:linear-gradient(155deg,#FFF8E7 0%,#E8F4FD 100%);
+  min-height:100vh;min-height:100dvh;
+  color:var(--text);user-select:none;overflow-x:hidden;
+}
+.screen{
+  display:none;flex-direction:column;align-items:center;
+  min-height:100vh;min-height:100dvh;
+  padding:24px 18px 32px;animation:fadeUp .3s ease;
+}
+.screen.active{display:flex;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
+
+/* Deco */
+#floatingDeco{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;}
+.deco-item{position:absolute;animation:floatUp linear infinite;opacity:.3;}
+@keyframes floatUp{0%{transform:translateY(110vh) rotate(0deg);opacity:0}8%{opacity:.3}92%{opacity:.3}100%{transform:translateY(-120px) rotate(360deg);opacity:0}}
+
+/* Welcome */
+#screen-welcome{justify-content:center;text-align:center;gap:22px;position:relative;z-index:1;}
+.mascot{font-size:88px;animation:mascotBounce 1.8s ease-in-out infinite;display:block;}
+@keyframes mascotBounce{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-14px) rotate(4deg)}}
+.welcome-title{font-size:36px;font-weight:900;color:var(--orange);text-shadow:3px 3px 0 rgba(255,107,53,.18);line-height:1.15;}
+.welcome-title span{color:var(--teal);}
+.welcome-sub{font-size:17px;font-weight:700;color:var(--muted);}
+
+/* Buttons */
+.btn-primary{background:linear-gradient(135deg,var(--orange),#FF8C42);color:#fff;border:none;border-radius:50px;padding:18px 52px;font-size:22px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 6px 22px rgba(255,107,53,.42);transition:transform .15s,box-shadow .15s;}
+.btn-primary:active{transform:scale(.95);}
+.btn-action{border:none;border-radius:50px;padding:16px 40px;font-size:22px;font-weight:900;font-family:inherit;cursor:pointer;width:100%;transition:transform .15s;}
+.btn-action:active{transform:scale(.97);}
+.btn-action:disabled{opacity:.5;cursor:not-allowed;}
+.btn-teal{background:linear-gradient(135deg,var(--teal),#3AB7B0);color:#fff;box-shadow:0 6px 20px rgba(78,205,196,.42);}
+.btn-green{background:linear-gradient(135deg,var(--green),#52b788);color:#fff;box-shadow:0 6px 20px rgba(107,203,119,.42);}
+.btn-orange{background:linear-gradient(135deg,var(--orange),#FF8C42);color:#fff;box-shadow:0 6px 20px rgba(255,107,53,.42);}
+
+/* Menu */
+#screen-menu{gap:14px;max-width:430px;width:100%;margin:0 auto;position:relative;z-index:1;}
+.menu-header{text-align:center;margin-bottom:6px;}
+.menu-header h2{font-size:26px;font-weight:900;}
+.menu-header p{font-size:14px;color:var(--muted);font-weight:700;}
+.menu-card{background:var(--white);border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:var(--shadow);border:3px solid transparent;transition:transform .15s,border-color .15s;}
+.menu-card:active{transform:scale(.97);}
+.menu-card.c-orange{border-color:var(--orange);}
+.menu-card.c-teal{border-color:var(--teal);}
+.menu-card.c-purple{border-color:var(--purple);}
+.menu-icon{font-size:46px;}.menu-info{flex:1;}
+.menu-title{font-size:20px;font-weight:900;}.menu-desc{font-size:13px;color:var(--muted);font-weight:700;}
+
+/* Game header */
+.game-header{display:flex;align-items:center;width:100%;gap:12px;margin-bottom:4px;}
+.btn-back{background:var(--white);border:none;border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer;box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s;}
+.btn-back:active{transform:scale(.9);}
+.progress-wrap{flex:1;background:rgba(0,0,0,.1);border-radius:50px;height:13px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:50px;transition:width .5s ease;}
+.stars-badge{font-size:18px;font-weight:900;color:var(--yellow);text-shadow:1px 1px 0 rgba(0,0,0,.2);min-width:58px;text-align:right;}
+
+/* Learn */
+#screen-learn{gap:14px;max-width:430px;width:100%;margin:0 auto;position:relative;z-index:1;}
+.learn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;}
+.learn-card{background:var(--white);border-radius:var(--radius);padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;box-shadow:var(--shadow);border:3px solid transparent;transition:transform .2s,border-color .2s;}
+.learn-card:active{transform:scale(.95);}
+.learn-card.active{border-color:var(--orange);}
+.learn-val{font-size:26px;font-weight:900;}
+.learn-tw{font-size:12px;color:var(--muted);font-weight:700;}
+.learn-tip{background:var(--white);border-radius:var(--radius);padding:14px 18px;text-align:center;box-shadow:var(--shadow);width:100%;font-size:16px;font-weight:800;color:var(--indigo);min-height:56px;display:flex;align-items:center;justify-content:center;}
+
+/* Exchange game */
+#screen-game{gap:14px;max-width:430px;width:100%;margin:0 auto;position:relative;z-index:1;}
+.question-card{background:var(--white);border-radius:var(--radius);padding:20px 18px;width:100%;text-align:center;box-shadow:var(--shadow);}
+.question-text{font-size:19px;font-weight:800;margin-bottom:16px;}
+.from-area{display:flex;justify-content:center;margin-bottom:12px;}
+.arrow-bounce{font-size:34px;animation:arrowPulse 1s ease-in-out infinite;margin:2px 0;}
+@keyframes arrowPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+.to-area{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:12px;background:#F5F7FA;border-radius:var(--radius-sm);min-height:80px;align-content:flex-start;}
+.to-slot{border-radius:8px;border:2.5px dashed #ccc;background:transparent;transition:all .3s ease;}
+.to-slot.bill-slot{width:70px;height:42px;}
+.to-slot.coin-slot{width:46px;height:46px;border-radius:50%;}
+.to-slot.filled{border:none;animation:popIn .3s cubic-bezier(.34,1.56,.64,1);}
+@keyframes popIn{from{transform:scale(0) rotate(-12deg);opacity:0}to{transform:scale(1) rotate(0deg);opacity:1}}
+.equation-box{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;border-radius:var(--radius-sm);padding:14px 20px;font-size:24px;font-weight:900;text-align:center;box-shadow:0 6px 20px rgba(102,126,234,.4);display:none;animation:fadeUp .4s ease;margin-top:12px;}
+.options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;}
+.opt-btn{background:var(--white);border:3px solid #e0e0e0;border-radius:var(--radius-sm);padding:18px;font-size:28px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .15s,border-color .15s;color:var(--text);}
+.opt-btn:active{transform:scale(.95);}
+.opt-btn.correct{background:#EDFFF1;border-color:var(--green);color:#2D7D3A;animation:wiggle .5s ease;}
+.opt-btn.wrong{background:#FFF0F0;border-color:var(--red);color:#C0392B;animation:shake .4s ease;}
+@keyframes wiggle{0%,100%{transform:scale(1)}25%{transform:scale(1.1) rotate(-3deg)}75%{transform:scale(1.1) rotate(3deg)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+/* Count */
+#screen-count{gap:12px;max-width:430px;width:100%;margin:0 auto;position:relative;z-index:1;}
+.target-card{background:linear-gradient(135deg,var(--purple),#C77DFF);color:#fff;border-radius:var(--radius);padding:18px;text-align:center;width:100%;box-shadow:0 6px 22px rgba(155,93,229,.42);}
+.target-lbl{font-size:15px;font-weight:700;opacity:.88;}.target-num{font-size:52px;font-weight:900;line-height:1;}
+.current-card{background:var(--white);border-radius:var(--radius-sm);padding:12px 20px;text-align:center;width:100%;box-shadow:var(--shadow-sm);font-size:18px;font-weight:800;}
+.current-num{font-size:34px;font-weight:900;color:var(--orange);}
+.palette{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;width:100%;}
+.palette-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform .15s;}
+.palette-item:active{transform:scale(.88);}
+.palette-lbl{font-size:11px;font-weight:800;color:var(--muted);}
+.selected-pile{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;min-height:64px;padding:12px;background:#F5F7FA;border-radius:var(--radius-sm);width:100%;align-content:flex-start;}
+.sel-item{position:relative;cursor:pointer;}
+.sel-item::after{content:'✕';position:absolute;top:-6px;right:-6px;background:var(--red);color:#fff;border-radius:50%;width:18px;height:18px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:900;}
+.btn-row{display:flex;gap:10px;width:100%;}
+.btn-clear-sm{background:var(--white);color:var(--red);border:3px solid var(--red);border-radius:50px;padding:12px 20px;font-size:17px;font-weight:900;font-family:inherit;cursor:pointer;flex-shrink:0;transition:transform .15s;}
+.btn-clear-sm:active{transform:scale(.95);}
+
+/* Celebration */
+#celebration{position:fixed;inset:0;background:rgba(0,0,0,.52);display:none;align-items:center;justify-content:center;z-index:200;}
+#celebration.active{display:flex;}
+.celeb-card{background:#fff;border-radius:32px;padding:40px 32px;text-align:center;max-width:320px;width:90%;animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
+.celeb-emoji{font-size:68px;margin-bottom:10px;}
+.celeb-title{font-size:32px;font-weight:900;color:var(--orange);margin-bottom:6px;}
+.celeb-sub{font-size:17px;font-weight:700;color:var(--muted);margin-bottom:22px;}
+.confetti{position:fixed;border-radius:2px;animation:confettiFall linear forwards;pointer-events:none;z-index:300;}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(105vh) rotate(720deg);opacity:0}}
+
+/* Done */
+#screen-done{justify-content:center;text-align:center;gap:22px;position:relative;z-index:1;}
+.done-emoji{font-size:80px;animation:mascotBounce 2s infinite;}
+.done-title{font-size:34px;font-weight:900;color:var(--orange);}
+.done-sub{font-size:18px;font-weight:700;color:var(--muted);}
+.welcome-hint{font-size:13px;color:#bbb;font-weight:700;}
+.total-stars-box{margin-top:auto;padding-top:16px;text-align:center;}
+.total-stars-box .star-num{font-size:40px;}
+.total-stars-box .star-lbl{font-size:13px;color:var(--muted);font-weight:700;}
+</style>
+</head>
+<body>
+<div id="floatingDeco"></div>
+
+<!-- WELCOME -->
+<div class="screen active" id="screen-welcome">
+  <span class="mascot">🐷</span>
+  <div>
+    <div class="welcome-title">小小換錢王<br><span>💰 開心學台幣</span></div>
+  </div>
+  <div class="welcome-sub">點一點，換一換，輕鬆學換算！</div>
+  <button class="btn-primary" onclick="goMenu()">開始遊戲 🎮</button>
+  <div class="welcome-hint">（首次點擊會開啟音效）</div>
+</div>
+
+<!-- MENU -->
+<div class="screen" id="screen-menu">
+  <div class="menu-header"><h2>選擇關卡 🎯</h2><p>你想玩哪一個？</p></div>
+  <div class="menu-card c-orange" onclick="startLearn()">
+    <div class="menu-icon">📖</div>
+    <div class="menu-info"><div class="menu-title" style="color:var(--orange)">認識錢幣</div><div class="menu-desc">點擊看看每張鈔票是多少錢</div></div>
+    <div>▶</div>
+  </div>
+  <div class="menu-card c-teal" onclick="startExchange()">
+    <div class="menu-icon">🔄</div>
+    <div class="menu-info"><div class="menu-title" style="color:var(--teal)">換換看</div><div class="menu-desc">大鈔可以換幾張小鈔？</div></div>
+    <div>▶</div>
+  </div>
+  <div class="menu-card c-purple" onclick="startCount()">
+    <div class="menu-icon">🧮</div>
+    <div class="menu-info"><div class="menu-title" style="color:var(--purple)">湊湊看</div><div class="menu-desc">用鈔票硬幣湊出指定金額</div></div>
+    <div>▶</div>
+  </div>
+  <div class="total-stars-box">
+    <div class="star-num">⭐ <span id="totalStars">0</span></div>
+    <div class="star-lbl">累計星星</div>
+  </div>
+</div>
+
+<!-- LEARN -->
+<div class="screen" id="screen-learn">
+  <div class="game-header">
+    <button class="btn-back" onclick="goMenu()">←</button>
+    <div style="font-size:20px;font-weight:900;flex:1;text-align:center">認識錢幣 📖</div>
+    <div style="width:44px"></div>
+  </div>
+  <div style="font-size:15px;font-weight:700;color:var(--muted);text-align:center">點一下聽聽看！</div>
+  <div class="learn-grid" id="learnGrid"></div>
+  <div class="learn-tip" id="learnTip">點擊上方任何一個錢幣 👆</div>
+</div>
+
+<!-- EXCHANGE GAME -->
+<div class="screen" id="screen-game">
+  <div class="game-header">
+    <button class="btn-back" onclick="goMenu()">←</button>
+    <div class="progress-wrap"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
+    <div class="stars-badge">⭐ <span id="gameStars">0</span></div>
+  </div>
+  <div class="question-card" id="phaseShow">
+    <div class="question-text" id="qText">loading…</div>
+    <div class="from-area"><div id="fromBill"></div></div>
+    <div class="arrow-bounce">⬇️</div>
+    <div class="to-area" id="toArea"></div>
+    <div class="equation-box" id="eqBox"></div>
+  </div>
+  <button class="btn-action btn-teal" id="btnExchange" onclick="doExchange()">✨ 換！看看能換幾個</button>
+  <div id="phaseQuiz" style="display:none;width:100%">
+    <div class="question-card" style="margin-bottom:12px">
+      <div class="question-text" id="quizText">剛才換了幾個？</div>
+    </div>
+    <div class="options-grid" id="optionsGrid"></div>
+  </div>
+</div>
+
+<!-- COUNT GAME -->
+<div class="screen" id="screen-count">
+  <div class="game-header">
+    <button class="btn-back" onclick="goMenu()">←</button>
+    <div style="font-size:20px;font-weight:900;flex:1;text-align:center">湊湊看 🧮</div>
+    <div class="stars-badge">⭐ <span id="countStars">0</span></div>
+  </div>
+  <div class="target-card"><div class="target-lbl">目標金額</div><div class="target-num" id="targetNum">—</div></div>
+  <div class="current-card">現在湊了：<span class="current-num" id="currentNum">0</span> 元</div>
+  <div style="font-size:14px;font-weight:700;color:var(--muted);text-align:center">點擊下方錢幣加入 👇</div>
+  <div class="palette" id="palette"></div>
+  <div style="font-size:12px;font-weight:700;color:#aaa;text-align:center">已選（點一下移除）</div>
+  <div class="selected-pile" id="selPile"></div>
+  <div class="btn-row">
+    <button class="btn-clear-sm" onclick="clearSel()">清除</button>
+    <button class="btn-action btn-green" style="flex:1;padding:14px 20px;font-size:20px" onclick="checkCount()">確認答案 ✓</button>
+  </div>
+</div>
+
+<!-- ALL DONE -->
+<div class="screen" id="screen-done">
+  <div class="done-emoji">🏆</div>
+  <div class="done-title">全部過關！</div>
+  <div class="done-sub" id="doneSubtitle">太棒了！</div>
+  <button class="btn-primary" onclick="goMenu()">回主選單 🏠</button>
+</div>
+
+<!-- CELEBRATION -->
+<div id="celebration">
+  <div class="celeb-card">
+    <div class="celeb-emoji" id="celebEmoji">🎉</div>
+    <div class="celeb-title" id="celebTitle">太棒了！</div>
+    <div class="celeb-sub" id="celebSub">你答對了！</div>
+    <button class="btn-action btn-orange" onclick="nextChallenge()">繼續 ▶</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   AUDIO ENGINE
+============================================================ */
+let AC=null,bgStarted=false;
+function initAudio(){if(AC)return;AC=new(window.AudioContext||window.webkitAudioContext)();startBg();}
+function tone(freq,dur,type='sine',vol=0.28,delay=0){
+  if(!AC)return;
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.connect(g);g.connect(AC.destination);
+  o.type=type;o.frequency.value=freq;
+  const t=AC.currentTime+delay;
+  g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vol,t+.02);
+  g.gain.exponentialRampToValueAtTime(.001,t+dur);
+  o.start(t);o.stop(t+dur+.05);
+}
+function sfxCorrect(){[523,659,784,1047].forEach((f,i)=>tone(f,.25,'sine',.3,i*.11));}
+function sfxWrong(){tone(220,.4,'sawtooth',.22);tone(185,.35,'sawtooth',.2,.15);}
+function sfxClick(){tone(880,.07,'sine',.14);}
+function sfxCoin(i=0){tone(600+i*80,.12,'sine',.22,i*.09);}
+function sfxCelebrate(){[523,659,784,1047,784,1047,1319].forEach((f,i)=>tone(f,.2,'sine',.35,i*.13));}
+function sfxLearn(val){const f=Math.min(300+val*.6,1000);tone(f,.3,'sine',.3);setTimeout(()=>tone(f*1.25,.2,'sine',.25),200);}
+function startBg(){
+  if(!AC||bgStarted)return;bgStarted=true;
+  const mg=AC.createGain();mg.gain.value=.055;mg.connect(AC.destination);
+  const mel=[523,587,659,784,880,784,659,587,523,0,392,440,523,659,523,0,784,880,1047,880,784,659,523,0];
+  let idx=0;
+  (function tick(){
+    const f=mel[idx++%mel.length];
+    if(f&&AC){const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(mg);o.type='triangle';o.frequency.value=f;g.gain.setValueAtTime(.85,AC.currentTime);g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+.35);o.start();o.stop(AC.currentTime+.4);}
+    setTimeout(tick,420);
+  })();
+}
+
+/* ============================================================
+   TAIWAN CURRENCY SVG RENDERER
+   真實台幣圖示化 - 對應現行流通幣值
+============================================================ */
+
+/* ── 紙鈔 SVG ── */
+// NT$1000 壹仟元：藍綠色，玉山山脈
+const SVG_1000 = (w,h) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 113" width="${w}" height="${h}" style="display:block;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.3)">
+  <defs>
+    <linearGradient id="g1k" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A7F7A"/><stop offset="100%" stop-color="#18B0AA"/>
+    </linearGradient>
+    <pattern id="p1k" width="14" height="14" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="14" x2="14" y2="0" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <!-- 底色 -->
+  <rect width="200" height="113" rx="7" fill="url(#g1k)"/>
+  <rect width="200" height="113" rx="7" fill="url(#p1k)"/>
+  <!-- 外框 -->
+  <rect x="4" y="4" width="192" height="105" rx="5" fill="none" stroke="rgba(255,255,255,0.35)" stroke-width="1.8"/>
+  <!-- 防偽線 -->
+  <rect x="32" y="0" width="3.5" height="113" fill="rgba(200,255,250,0.18)"/>
+  <!-- 玉山山脈剪影 -->
+  <path d="M0,113 L0,85 L18,70 L35,78 L55,58 L75,68 L95,48 L115,62 L130,44 L148,55 L165,40 L180,52 L200,38 L200,113 Z" fill="rgba(0,50,48,0.28)"/>
+  <!-- 月亮 -->
+  <circle cx="170" cy="30" r="16" fill="rgba(255,255,255,0.1)"/>
+  <circle cx="176" cy="27" r="13" fill="rgba(10,127,122,0.7)"/>
+  <!-- 面額數字 -->
+  <text x="100" y="64" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="38" fill="white" opacity=".95">1000</text>
+  <!-- 新台幣 -->
+  <text x="100" y="80" text-anchor="middle" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,0.8)" letter-spacing="3">新 台 幣</text>
+  <!-- 角落字 -->
+  <text x="9" y="20" font-family="serif" font-size="9.5" fill="rgba(255,255,255,0.75)">壹仟元</text>
+  <text x="9" y="106" font-family="sans-serif" font-size="12" font-weight="900" fill="rgba(255,255,255,0.85)">1000</text>
+  <text x="191" y="106" text-anchor="end" font-family="sans-serif" font-size="12" font-weight="900" fill="rgba(255,255,255,0.85)">1000</text>
+  <!-- 中華民國 -->
+  <text x="191" y="20" text-anchor="end" font-family="serif" font-size="9" fill="rgba(255,255,255,0.65)">中華民國</text>
+</svg>`;
+
+// NT$500 伍佰元：棕褐色，梅花
+const SVG_500 = (w,h) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 113" width="${w}" height="${h}" style="display:block;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.3)">
+  <defs>
+    <linearGradient id="g5h" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7C5228"/><stop offset="100%" stop-color="#BF8640"/>
+    </linearGradient>
+    <pattern id="p5h" width="14" height="14" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="14" x2="14" y2="0" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="200" height="113" rx="7" fill="url(#g5h)"/>
+  <rect width="200" height="113" rx="7" fill="url(#p5h)"/>
+  <rect x="4" y="4" width="192" height="105" rx="5" fill="none" stroke="rgba(255,220,150,0.4)" stroke-width="1.8"/>
+  <rect x="32" y="0" width="3.5" height="113" fill="rgba(255,220,150,0.15)"/>
+  <!-- 梅花圖案 -->
+  <g transform="translate(152,55)" opacity="0.25">
+    <circle cx="0" cy="-18" r="8" fill="white"/>
+    <circle cx="17" cy="-6" r="8" fill="white"/>
+    <circle cx="11" cy="14" r="8" fill="white"/>
+    <circle cx="-11" cy="14" r="8" fill="white"/>
+    <circle cx="-17" cy="-6" r="8" fill="white"/>
+    <circle cx="0" cy="0" r="6" fill="rgba(190,130,50,0.8)"/>
+  </g>
+  <!-- 小梅花裝飾 -->
+  <g transform="translate(30,35)" opacity="0.18" scale="0.6">
+    <circle cx="0" cy="-12" r="6" fill="white"/>
+    <circle cx="11" cy="-4" r="6" fill="white"/>
+    <circle cx="7" cy="9" r="6" fill="white"/>
+    <circle cx="-7" cy="9" r="6" fill="white"/>
+    <circle cx="-11" cy="-4" r="6" fill="white"/>
+  </g>
+  <text x="100" y="64" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="38" fill="white" opacity=".95">500</text>
+  <text x="100" y="80" text-anchor="middle" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,0.8)" letter-spacing="3">新 台 幣</text>
+  <text x="9" y="20" font-family="serif" font-size="9.5" fill="rgba(255,255,255,0.75)">伍佰元</text>
+  <text x="9" y="106" font-family="sans-serif" font-size="12" font-weight="900" fill="rgba(255,255,255,0.85)">500</text>
+  <text x="191" y="106" text-anchor="end" font-family="sans-serif" font-size="12" font-weight="900" fill="rgba(255,255,255,0.85)">500</text>
+  <text x="191" y="20" text-anchor="end" font-family="serif" font-size="9" fill="rgba(255,255,255,0.65)">中華民國</text>
+</svg>`;
+
+// NT$200 貳佰元：綠色，總統府
+const SVG_200 = (w,h) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 113" width="${w}" height="${h}" style="display:block;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.3)">
+  <defs>
+    <linearGradient id="g2b" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1A6830"/><stop offset="100%" stop-color="#2BAE50"/>
+    </linearGradient>
+    <pattern id="p2b" width="14" height="14" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="14" x2="14" y2="0" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="200" height="113" rx="7" fill="url(#g2b)"/>
+  <rect width="200" height="113" rx="7" fill="url(#p2b)"/>
+  <rect x="4" y="4" width="192" height="105" rx="5" fill="none" stroke="rgba(180,255,180,0.35)" stroke-width="1.8"/>
+  <rect x="32" y="0" width="3.5" height="113" fill="rgba(180,255,180,0.12)"/>
+  <!-- 總統府 建築外廓 -->
+  <g transform="translate(145,30)" opacity="0.22">
+    <!-- 主體 -->
+    <rect x="-28" y="20" width="56" height="36" fill="white"/>
+    <!-- 柱子 -->
+    <rect x="-22" y="18" width="5" height="38" fill="rgba(200,255,200,0.8)"/>
+    <rect x="-11" y="18" width="5" height="38" fill="rgba(200,255,200,0.8)"/>
+    <rect x="6"  y="18" width="5" height="38" fill="rgba(200,255,200,0.8)"/>
+    <rect x="17" y="18" width="5" height="38" fill="rgba(200,255,200,0.8)"/>
+    <!-- 屋頂 -->
+    <path d="M-32,20 L0,-8 L32,20 Z" fill="white"/>
+    <!-- 時鐘塔 -->
+    <rect x="-5" y="-22" width="10" height="30" fill="white"/>
+    <circle cx="0" cy="-22" r="7" fill="white"/>
+  </g>
+  <text x="100" y="64" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="38" fill="white" opacity=".95">200</text>
+  <text x="100" y="80" text-anchor="middle" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,0.8)" letter-spacing="3">新 台 幣</text>
+  <text x="9" y="20" font-family="serif" font-size="9.5" fill="rgba(255,255,255,0.75)">貳佰元</text>
+  <text x="9" y="106" font-family="sans-serif" font-size="12" font-weight="900" fill="rgba(255,255,255,0.85)">200</text>
+  <text x="191" y="106" text-anchor="end" font-family="sans-serif" font-size="12" font-weight="900" fill="rgba(255,255,255,0.85)">200</text>
+  <text x="191" y="20" text-anchor="end" font-family="serif" font-size="9" fill="rgba(255,255,255,0.65)">中華民國</text>
+</svg>`;
+
+// NT$100 壹佰元：紅色，孫文側臉
+const SVG_100 = (w,h) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 113" width="${w}" height="${h}" style="display:block;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.3)">
+  <defs>
+    <linearGradient id="g1b" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#B01818"/><stop offset="100%" stop-color="#DC3030"/>
+    </linearGradient>
+    <pattern id="p1b" width="14" height="14" patternUnits="userSpaceOnUse">
+      <line x1="0" y1="14" x2="14" y2="0" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+    </pattern>
+  </defs>
+  <rect width="200" height="113" rx="7" fill="url(#g1b)"/>
+  <rect width="200" height="113" rx="7" fill="url(#p1b)"/>
+  <rect x="4" y="4" width="192" height="105" rx="5" fill="none" stroke="rgba(255,180,180,0.4)" stroke-width="1.8"/>
+  <rect x="32" y="0" width="3.5" height="113" fill="rgba(255,180,180,0.15)"/>
+  <!-- 孫文側臉剪影 -->
+  <g transform="translate(158,56)" opacity="0.22">
+    <ellipse cx="0" cy="-10" rx="18" ry="22" fill="white"/>
+    <!-- 帽子 -->
+    <rect x="-20" y="-32" width="38" height="8" fill="white" rx="2"/>
+    <rect x="-14" y="-48" width="26" height="18" fill="white" rx="3"/>
+    <!-- 衣領 -->
+    <path d="M-18,14 Q0,30 18,14 L22,40 L-22,40 Z" fill="white"/>
+    <path d="M-4,14 L0,24 L4,14" fill="rgba(180,0,0,0.5)"/>
+    <!-- 耳朵 -->
+    <ellipse cx="16" cy="-4" rx="5" ry="7" fill="white"/>
+  </g>
+  <text x="100" y="64" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="38" fill="white" opacity=".95">100</text>
+  <text x="100" y="80" text-anchor="middle" font-family="sans-serif" font-size="11" fill="rgba(255,255,255,0.8)" letter-spacing="3">新 台 幣</text>
+  <text x="9" y="20" font-family="serif" font-size="9.5" fill="rgba(255,255,255,0.75)">壹佰元</text>
+  <text x="9" y="106" font-family="sans-serif" font-size="12" font-weight="900" fill="rgba(255,255,255,0.85)">100</text>
+  <text x="191" y="106" text-anchor="end" font-family="sans-serif" font-size="12" font-weight="900" fill="rgba(255,255,255,0.85)">100</text>
+  <text x="191" y="20" text-anchor="end" font-family="serif" font-size="9" fill="rgba(255,255,255,0.65)">中華民國</text>
+</svg>`;
+
+/* ── 硬幣 SVG ── */
+// NT$50 伍拾元：雙色（外銀白銅 / 內黃銅金）
+const SVG_50 = (s) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${s}" height="${s}" style="display:block">
+  <defs>
+    <radialGradient id="g50o" cx="40%" cy="35%">
+      <stop offset="0%" stop-color="#D8E0E4"/><stop offset="100%" stop-color="#8CA0AA"/>
+    </radialGradient>
+    <radialGradient id="g50i" cx="38%" cy="35%">
+      <stop offset="0%" stop-color="#FFE44A"/><stop offset="100%" stop-color="#D4960A"/>
+    </radialGradient>
+  </defs>
+  <!-- 外環（銀白銅）-->
+  <circle cx="50" cy="50" r="48" fill="url(#g50o)"/>
+  <!-- 齒紋 -->
+  <circle cx="50" cy="50" r="47" fill="none" stroke="#7A8E98" stroke-width="2" stroke-dasharray="4,3"/>
+  <!-- 內圓（黃銅金）-->
+  <circle cx="50" cy="50" r="34" fill="url(#g50i)"/>
+  <!-- 內圓高光 -->
+  <circle cx="42" cy="42" r="10" fill="rgba(255,255,255,0.2)"/>
+  <!-- 面額 -->
+  <text x="50" y="57" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="26" fill="#5D4037">50</text>
+  <!-- 元 -->
+  <text x="50" y="70" text-anchor="middle" font-family="sans-serif" font-size="9" fill="rgba(80,50,0,0.7)">元</text>
+</svg>`;
+
+// NT$10 拾元：雙色（外黃銅金 / 內銀白銅）
+const SVG_10 = (s) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${s}" height="${s}" style="display:block">
+  <defs>
+    <radialGradient id="g10o" cx="40%" cy="35%">
+      <stop offset="0%" stop-color="#FFE44A"/><stop offset="100%" stop-color="#C48A00"/>
+    </radialGradient>
+    <radialGradient id="g10i" cx="38%" cy="35%">
+      <stop offset="0%" stop-color="#E8EEF2"/><stop offset="100%" stop-color="#8CA0AA"/>
+    </radialGradient>
+  </defs>
+  <!-- 外環（黃銅金）-->
+  <circle cx="50" cy="50" r="48" fill="url(#g10o)"/>
+  <circle cx="50" cy="50" r="47" fill="none" stroke="#B07800" stroke-width="2" stroke-dasharray="4,3"/>
+  <!-- 內圓（白銅銀）-->
+  <circle cx="50" cy="50" r="34" fill="url(#g10i)"/>
+  <circle cx="42" cy="42" r="10" fill="rgba(255,255,255,0.25)"/>
+  <text x="50" y="57" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="26" fill="#37474F">10</text>
+  <text x="50" y="70" text-anchor="middle" font-family="sans-serif" font-size="9" fill="rgba(50,60,70,0.7)">元</text>
+</svg>`;
+
+// NT$5 伍元：銅色（白銅合金）
+const SVG_5 = (s) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${s}" height="${s}" style="display:block">
+  <defs>
+    <radialGradient id="g5c" cx="38%" cy="35%">
+      <stop offset="0%" stop-color="#C4956A"/><stop offset="100%" stop-color="#8B6040"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="url(#g5c)"/>
+  <circle cx="50" cy="50" r="47" fill="none" stroke="#7A5030" stroke-width="2" stroke-dasharray="4,3"/>
+  <!-- 內框 -->
+  <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  <circle cx="42" cy="42" r="9" fill="rgba(255,255,255,0.18)"/>
+  <text x="50" y="57" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="30" fill="white">5</text>
+  <text x="50" y="70" text-anchor="middle" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,0.75)">元</text>
+</svg>`;
+
+// NT$1 壹元：銀色（鎳鋼合金）
+const SVG_1 = (s) => `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="${s}" height="${s}" style="display:block">
+  <defs>
+    <radialGradient id="g1c" cx="38%" cy="35%">
+      <stop offset="0%" stop-color="#CFD8DC"/><stop offset="100%" stop-color="#78909C"/>
+    </radialGradient>
+  </defs>
+  <circle cx="50" cy="50" r="48" fill="url(#g1c)"/>
+  <circle cx="50" cy="50" r="47" fill="none" stroke="#607D8B" stroke-width="2" stroke-dasharray="4,3"/>
+  <circle cx="50" cy="50" r="38" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+  <circle cx="42" cy="42" r="9" fill="rgba(255,255,255,0.22)"/>
+  <text x="50" y="57" text-anchor="middle" font-family="Georgia,serif" font-weight="900" font-size="30" fill="white">1</text>
+  <text x="50" y="70" text-anchor="middle" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,0.75)">元</text>
+</svg>`;
+
+/* ── 尺寸對照表 ── */
+const BILL_SIZES = {xl:{w:170,h:96}, md:{w:90,h:51}, sm:{w:70,h:40}, xs:{w:58,h:33}};
+const COIN_SIZES = {xl:72, md:52, sm:42, xs:34};
+
+const SVG_MAKERS = {
+  1000: SVG_1000, 500: SVG_500, 200: SVG_200, 100: SVG_100,
+  50: SVG_50,     10:  SVG_10,  5:   SVG_5,   1:   SVG_1
+};
+
+function makeDenomEl(v, sizeKey) {
+  const fn = SVG_MAKERS[v];
+  if (!fn) return document.createElement('div');
+  const d = DENOMS.find(x=>x.v===v);
+  const wrapper = document.createElement('div');
+  if (d.type === 'bill') {
+    const {w,h} = BILL_SIZES[sizeKey] || BILL_SIZES.md;
+    wrapper.innerHTML = fn(w, h);
+  } else {
+    const s = COIN_SIZES[sizeKey] || COIN_SIZES.md;
+    wrapper.innerHTML = fn(s);
+  }
+  return wrapper.firstElementChild;
+}
+
+/* ============================================================
+   DATA
+============================================================ */
+const DENOMS = [
+  {v:1000,type:'bill',label:'1000元',tw:'壹仟元',tips:'藍綠色大鈔！背面有台灣最高的山──玉山！',clr:['#0A7F7A','#18B0AA']},
+  {v:500, type:'bill',label:'500元', tw:'伍佰元',tips:'棕褐色鈔票！上面有漂亮的梅花圖案！',clr:['#7C5228','#BF8640']},
+  {v:200, type:'bill',label:'200元', tw:'貳佰元',tips:'綠色鈔票！上面有總統府的圖案，比較少見唷！',clr:['#1A6830','#2BAE50']},
+  {v:100, type:'bill',label:'100元', tw:'壹佰元',tips:'紅色鈔票！上面有孫中山先生的肖像！',clr:['#B01818','#DC3030']},
+  {v:50,  type:'coin',label:'50元',  tw:'伍拾元', tips:'最大的硬幣！外面是銀色，裡面是金色！',clr:['#90A4AE','#FFD700']},
+  {v:10,  type:'coin',label:'10元',  tw:'拾元',   tips:'外面是金色，裡面是銀色的雙色硬幣！',clr:['#FFD700','#E0E0E0']},
+  {v:5,   type:'coin',label:'5元',   tw:'伍元',   tips:'銅色小硬幣，上面有鑄造年份！',clr:['#A1887F','#8D6E63']},
+  {v:1,   type:'coin',label:'1元',   tw:'壹元',   tips:'最小的銀色硬幣，1元1元慢慢存！',clr:['#90A4AE','#78909C']},
+];
+
+const EXCHANGE_Q = [
+  {from:1000,to:100,ans:10},
+  {from:500, to:100,ans:5},
+  {from:100, to:10, ans:10},
+  {from:1000,to:500,ans:2},
+  {from:100, to:50, ans:2},
+  {from:50,  to:10, ans:5},
+  {from:1000,to:100,ans:10},
+];
+
+const COUNT_Q = [
+  {target:150},{target:250},{target:360},
+  {target:550},{target:1100},{target:1050},
+];
+
+/* ============================================================
+   STATE
+============================================================ */
+const S = {
+  gameStars:0,countStars:0,exchIdx:0,countIdx:0,
+  cur:null,phase:'show',selBills:[],countTarget:0,
+};
+
+function denom(v){return DENOMS.find(d=>d.v===v);}
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+
+/* ============================================================
+   SCREENS
+============================================================ */
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+function goMenu(){
+  initAudio();sfxClick();
+  document.getElementById('totalStars').textContent=S.gameStars+S.countStars;
+  showScreen('screen-menu');
+}
+
+/* ── Floating Deco ── */
+(function(){
+  const w=document.getElementById('floatingDeco');
+  ['💰','🪙','⭐','✨','🎈','💵'].forEach((e,i)=>{
+    for(let j=0;j<2;j++){
+      const el=document.createElement('div');
+      el.className='deco-item';el.textContent=e;
+      el.style.left=Math.random()*100+'%';
+      el.style.fontSize=(18+Math.random()*20)+'px';
+      el.style.animationDuration=(9+Math.random()*9)+'s';
+      el.style.animationDelay=(Math.random()*12)+'s';
+      w.appendChild(el);
+    }
+  });
+})();
+
+/* ============================================================
+   LEARN
+============================================================ */
+function startLearn(){
+  initAudio();sfxClick();
+  const grid=document.getElementById('learnGrid');
+  grid.innerHTML='';
+  document.getElementById('learnTip').textContent='點擊上方任何一個錢幣 👆';
+  DENOMS.forEach(d=>{
+    const card=document.createElement('div');
+    card.className='learn-card';
+    // 幣的圖示
+    const imgWrap=document.createElement('div');
+    imgWrap.appendChild(makeDenomEl(d.v,'sm'));
+    card.appendChild(imgWrap);
+    // 金額文字
+    const val=document.createElement('div');
+    val.className='learn-val';
+    val.style.color=d.clr[0];
+    val.textContent=d.label;
+    card.appendChild(val);
+    // 漢字
+    const tw=document.createElement('div');
+    tw.className='learn-tw';
+    tw.textContent=d.tw;
+    card.appendChild(tw);
+    // 點擊
+    card.onclick=()=>{
+      initAudio();sfxLearn(d.v);
+      document.querySelectorAll('.learn-card').forEach(c=>c.classList.remove('active'));
+      card.classList.add('active');
+      document.getElementById('learnTip').textContent=d.tips;
+      // 彈跳
+      const img=imgWrap.firstChild;
+      img.style.transform='scale(1.25)';img.style.transition='transform .25s';
+      setTimeout(()=>{img.style.transform='';},300);
+    };
+    grid.appendChild(card);
+  });
+  showScreen('screen-learn');
+}
+
+/* ============================================================
+   EXCHANGE
+============================================================ */
+function startExchange(){
+  initAudio();sfxClick();
+  S.exchIdx=0;S.gameStars=0;
+  document.getElementById('gameStars').textContent=0;
+  loadExchange();showScreen('screen-game');
+}
+
+function loadExchange(){
+  if(S.exchIdx>=EXCHANGE_Q.length){showAllDone();return;}
+  S.cur=EXCHANGE_Q[S.exchIdx];S.phase='show';
+  const{from,to,ans}=S.cur;
+  const fd=denom(from),td=denom(to);
+  document.getElementById('progressBar').style.width=(S.exchIdx/EXCHANGE_Q.length*100)+'%';
+  const toLabel=td.type==='bill'?`張 ${td.label}`:`枚 ${td.label}`;
+  document.getElementById('qText').textContent=`${fd.label} 可以換幾${toLabel}？`;
+  // from bill
+  const fb=document.getElementById('fromBill');
+  fb.innerHTML='';fb.appendChild(makeDenomEl(from,'xl'));
+  // to slots
+  const ta=document.getElementById('toArea');ta.innerHTML='';
+  for(let i=0;i<ans;i++){
+    const slot=document.createElement('div');
+    slot.className=`to-slot ${td.type==='coin'?'coin-slot':'bill-slot'}`;
+    slot.id='slot'+i;ta.appendChild(slot);
+  }
+  document.getElementById('eqBox').style.display='none';
+  const btn=document.getElementById('btnExchange');
+  btn.style.display='block';btn.disabled=false;
+  document.getElementById('phaseQuiz').style.display='none';
+}
+
+async function doExchange(){
+  if(S.phase!=='show')return;
+  const{from,to,ans}=S.cur;
+  const td=denom(to);
+  document.getElementById('btnExchange').disabled=true;
+  for(let i=0;i<ans;i++){
+    await delay(160);
+    const slot=document.getElementById('slot'+i);
+    if(!slot)continue;
+    slot.classList.add('filled');
+    // 縮小版幣圖
+    const el=makeDenomEl(to,'xs');
+    if(td.type==='coin'){
+      // 讓硬幣填滿 slot
+      el.style.width='40px';el.style.height='40px';
+    }
+    slot.appendChild(el);
+    sfxCoin(i);
+  }
+  await delay(350);
+  const eq=document.getElementById('eqBox');
+  eq.textContent=`${from} = ${ans} × ${to}`;eq.style.display='block';
+  sfxCoin(ans);
+  await delay(1600);showQuiz();
+}
+
+function showQuiz(){
+  S.phase='quiz';
+  const{to,ans}=S.cur;const td=denom(to);
+  const toLabel=td.type==='bill'?`張 ${td.label}`:`枚 ${td.label}`;
+  document.getElementById('quizText').textContent=`剛才換了幾${toLabel}？`;
+  document.getElementById('btnExchange').style.display='none';
+  const opts=new Set([ans]);
+  const deltas=[1,2,3,4,5,8,10,15];let di=0;
+  while(opts.size<4){
+    const d=deltas[di++]||Math.floor(Math.random()*10+1);
+    const w=ans+(Math.random()>.5?1:-1)*d;
+    if(w>0&&w!==ans)opts.add(w);
+  }
+  const grid=document.getElementById('optionsGrid');grid.innerHTML='';
+  [...opts].sort(()=>Math.random()-.5).forEach(v=>{
+    const b=document.createElement('button');
+    b.className='opt-btn';b.textContent=v;
+    b.onclick=()=>handleOpt(v,ans,b);grid.appendChild(b);
+  });
+  document.getElementById('phaseQuiz').style.display='block';
+}
+
+function handleOpt(chosen,ans,btn){
+  if(S.phase!=='quiz')return;S.phase='done';
+  document.querySelectorAll('.opt-btn').forEach(b=>b.onclick=null);
+  if(chosen===ans){
+    btn.classList.add('correct');sfxCorrect();
+    S.gameStars++;document.getElementById('gameStars').textContent=S.gameStars;
+    setTimeout(()=>celebrate(true,`${ans} 個！答對了！`),500);
+  }else{
+    btn.classList.add('wrong');
+    document.querySelectorAll('.opt-btn').forEach(b=>{if(parseInt(b.textContent)===ans)b.classList.add('correct');});
+    sfxWrong();setTimeout(()=>celebrate(false,`正確答案是 ${ans} 個，繼續加油！`),800);
+  }
+}
+
+/* ============================================================
+   COUNT
+============================================================ */
+function startCount(){
+  initAudio();sfxClick();
+  S.selBills=[];S.countIdx=0;S.countStars=0;
+  document.getElementById('countStars').textContent=0;
+  loadCount();showScreen('screen-count');
+}
+function loadCount(){
+  const q=COUNT_Q[S.countIdx%COUNT_Q.length];
+  S.countTarget=q.target;S.selBills=[];
+  document.getElementById('targetNum').textContent=q.target+' 元';
+  document.getElementById('currentNum').textContent='0';
+  document.getElementById('currentNum').style.color='var(--orange)';
+  document.getElementById('selPile').innerHTML='';
+  const pal=document.getElementById('palette');pal.innerHTML='';
+  DENOMS.filter(d=>d.v<=q.target).forEach(d=>{
+    const wrap=document.createElement('div');wrap.className='palette-item';
+    wrap.appendChild(makeDenomEl(d.v,d.type==='bill'?'sm':'sm'));
+    const lbl=document.createElement('div');lbl.className='palette-lbl';lbl.textContent='+'+d.v;
+    wrap.appendChild(lbl);wrap.onclick=()=>addBill(d.v);pal.appendChild(wrap);
+  });
+}
+function addBill(v){
+  initAudio();S.selBills.push(v);
+  const total=S.selBills.reduce((a,b)=>a+b,0);
+  const el=document.getElementById('currentNum');el.textContent=total;
+  if(total>S.countTarget)el.style.color='var(--red)';
+  else if(total===S.countTarget){el.style.color='var(--green)';sfxCorrect();}
+  else el.style.color='var(--orange)';
+  renderSelPile();tone(400+S.selBills.length*15,.09,'sine',.18);
+}
+function renderSelPile(){
+  const pile=document.getElementById('selPile');pile.innerHTML='';
+  S.selBills.forEach((v,i)=>{
+    const wrap=document.createElement('div');wrap.className='sel-item';
+    const d=denom(v);
+    wrap.appendChild(makeDenomEl(v,'xs'));
+    wrap.onclick=()=>{
+      S.selBills.splice(i,1);
+      const t=S.selBills.reduce((a,b)=>a+b,0);
+      document.getElementById('currentNum').textContent=t;
+      document.getElementById('currentNum').style.color='var(--orange)';
+      renderSelPile();sfxClick();
+    };pile.appendChild(wrap);
+  });
+}
+function clearSel(){initAudio();sfxClick();S.selBills=[];document.getElementById('currentNum').textContent='0';document.getElementById('currentNum').style.color='var(--orange)';document.getElementById('selPile').innerHTML='';}
+function checkCount(){
+  initAudio();const total=S.selBills.reduce((a,b)=>a+b,0);
+  if(total===S.countTarget){sfxCorrect();S.countStars++;document.getElementById('countStars').textContent=S.countStars;celebrate(true,`你用錢幣湊出了 ${total} 元！`);}
+  else if(total<S.countTarget){sfxWrong();celebrate(false,`還差 ${S.countTarget-total} 元，再加一些！`);}
+  else{sfxWrong();celebrate(false,`多了 ${total-S.countTarget} 元，拿掉一些！`);}
+}
+
+/* ============================================================
+   CELEBRATION
+============================================================ */
+const TITLES=['太棒了！','答對了！','好厲害！','完美！','超強的！'];
+const EMOJIS=['🎉','🌟','🏆','🎊','✨','🎈'];
+function celebrate(ok,sub){
+  document.getElementById('celebEmoji').textContent=ok?EMOJIS[Math.floor(Math.random()*EMOJIS.length)]:'😊';
+  document.getElementById('celebTitle').textContent=ok?TITLES[Math.floor(Math.random()*TITLES.length)]:'繼續加油！';
+  document.getElementById('celebSub').textContent=sub;
+  document.getElementById('celebration').classList.add('active');
+  if(ok){sfxCelebrate();spawnConfetti();}
+}
+function nextChallenge(){
+  document.getElementById('celebration').classList.remove('active');
+  const a=document.querySelector('.screen.active');
+  if(a.id==='screen-game'){S.exchIdx++;loadExchange();}
+  else if(a.id==='screen-count'){S.countIdx++;loadCount();}
+}
+function showAllDone(){
+  document.getElementById('doneSubtitle').textContent=`你得到了 ${S.gameStars} 顆星！換換看全部過關！`;
+  sfxCelebrate();spawnConfetti();setTimeout(()=>showScreen('screen-done'),200);
+}
+function spawnConfetti(){
+  const cols=['#FF6B35','#4ECDC4','#FFD93D','#6BCB77','#FF6B6B','#9B5DE5','#4F46E5'];
+  for(let i=0;i<45;i++){
+    const p=document.createElement('div');p.className='confetti';
+    p.style.left=Math.random()*100+'vw';p.style.top='-20px';
+    p.style.width=(6+Math.random()*8)+'px';p.style.height=(10+Math.random()*14)+'px';
+    p.style.borderRadius=Math.random()>.5?'50%':'2px';
+    p.style.background=cols[Math.floor(Math.random()*cols.length)];
+    p.style.animationDuration=(1.4+Math.random()*2)+'s';
+    p.style.animationDelay=(Math.random()*.6)+'s';
+    document.body.appendChild(p);setTimeout(()=>p.remove(),4000);
+  }
+}
+</script>
+</body>
+</html>

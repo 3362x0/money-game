@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 <title>小小換錢王 💰</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
+<!-- OpenMoji: 輕量自製 parser，無需額外 JS library -->
 <style>
 :root {
   --orange:#FF6B35; --teal:#4ECDC4; --yellow:#FFD93D;
@@ -77,7 +77,7 @@ body{
 .menu-info{flex:1;}
 .menu-title{font-size:20px;font-weight:900;white-space:nowrap;}
 .menu-desc{font-size:13px;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-/* Twemoji 全局 */
+/* OpenMoji emoji img */
 img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 .mascot img.emoji{width:88px!important;height:88px!important;vertical-align:middle;}
 .celeb-emoji img.emoji{width:64px!important;height:64px!important;}
@@ -205,17 +205,17 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 <div class="screen" id="screen-menu">
   <div class="menu-header"><h2>選擇關卡</h2><p>你想玩哪一個？</p></div>
   <div class="menu-card c-orange" onclick="startLearn()">
-    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4d6.svg" alt="📖"></div>
+    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F4D6.svg" alt="📖" class="emoji" style="width:52px;height:52px;object-fit:contain;"></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--orange)">認識錢幣</div><div class="menu-desc">點擊看看每張鈔票是多少錢</div></div>
     <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
   </div>
   <div class="menu-card c-teal" onclick="startExchange()">
-    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f504.svg" alt="🔄"></div>
+    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F504.svg" alt="🔄" class="emoji" style="width:52px;height:52px;object-fit:contain;"></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--teal)">換換看</div><div class="menu-desc">大鈔可以換幾張小鈔？</div></div>
     <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
   </div>
   <div class="menu-card c-purple" onclick="startCount()">
-    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f9ee.svg" alt="🧮"></div>
+    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F9EE.svg" alt="🧮" class="emoji" style="width:52px;height:52px;object-fit:contain;"></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--purple)">算算看</div><div class="menu-desc">用鈔票硬幣湊出指定金額</div></div>
     <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
   </div>
@@ -298,10 +298,57 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 </div>
 
 <script>
-// 頁面載入後立即套用 Twemoji
+/* ============================================================
+   OPENMOJI ENGINE
+   輕量自製 emoji → OpenMoji SVG 替換器（無外部 JS library）
+   CDN: cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/{CODEPOINT}.svg
+============================================================ */
+const OM_CDN = 'https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/';
+
+function emojiCp(s) {
+  return [...s].map(c => c.codePointAt(0).toString(16).toUpperCase()).join('-');
+}
+
+function makeEmojiImg(em, styleStr) {
+  const img = document.createElement('img');
+  img.src  = OM_CDN + emojiCp(em) + '.svg';
+  img.alt  = em;
+  img.className = 'emoji';
+  img.style.cssText = styleStr;
+  img.onerror = function() {
+    const stripped = em.replace(/[\uFE0F\uFE0E]/g, '');
+    const fallback  = OM_CDN + emojiCp(stripped) + '.svg';
+    if (img.src !== fallback) { img.src = fallback; img.onerror = null; }
+  };
+  return img;
+}
+
+const EMOJI_RE = /(?:[\u{1F1E0}-\u{1F1FF}]{2}|\p{Extended_Pictographic}(?:\uFE0F)?(?:\u20E3)?(?:\u200D(?:\p{Extended_Pictographic}(?:\uFE0F)?(?:\u20E3)?))*)/gsu;
+
+function parseEmoji(root, styleStr = 'width:1.2em;height:1.2em;vertical-align:-0.15em;object-fit:contain;display:inline-block;') {
+  if (!root) return;
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
+  const nodes = [];
+  let n;
+  while ((n = walker.nextNode())) nodes.push(n);
+  nodes.forEach(node => {
+    if (!EMOJI_RE.test(node.textContent)) return;
+    EMOJI_RE.lastIndex = 0;
+    const frag = document.createDocumentFragment();
+    let last = 0, m;
+    while ((m = EMOJI_RE.exec(node.textContent)) !== null) {
+      if (m.index > last) frag.appendChild(document.createTextNode(node.textContent.slice(last, m.index)));
+      frag.appendChild(makeEmojiImg(m[0], styleStr));
+      last = m.index + m[0].length;
+    }
+    if (last < node.textContent.length) frag.appendChild(document.createTextNode(node.textContent.slice(last)));
+    node.parentNode?.replaceChild(frag, node);
+  });
+}
+
+// 頁面載入後立即套用 OpenMoji
 document.addEventListener('DOMContentLoaded',()=>{
-  twemoji.parse(document.body,{folder:'svg',ext:'.svg',
-    attributes:()=>({style:'width:1.2em;height:1.2em;vertical-align:-0.15em;object-fit:contain;display:inline-block;'})});
+  parseEmoji(document.body);
 });
 
 /* ============================================================
@@ -732,9 +779,8 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const el=document.getElementById(id);
   el.classList.add('active');
-  // 套用 Twemoji（讓所有 emoji 變成可愛圖片）
-  twemoji.parse(el,{folder:'svg',ext:'.svg',
-    attributes:()=>({style:'width:1.2em;height:1.2em;vertical-align:-0.15em;object-fit:contain;'})});
+  // 套用 OpenMoji（讓所有 emoji 變成可愛圖片）
+  parseEmoji(el);
 }
 function goMenu(){
   initAudio();sfxClick();
@@ -1048,8 +1094,7 @@ function celebrate(ok,sub){
   document.getElementById('celebSub').textContent=sub;
   const celebEl=document.getElementById('celebration');
   celebEl.classList.add('active');
-  twemoji.parse(celebEl,{folder:'svg',ext:'.svg',
-    attributes:()=>({style:'width:1.4em;height:1.4em;vertical-align:-0.2em;object-fit:contain;'})});
+  parseEmoji(celebEl,'width:1.4em;height:1.4em;vertical-align:-0.2em;object-fit:contain;display:inline-block;');
   if(ok){sfxCelebrate();spawnConfetti();}
 }
 function nextChallenge(){

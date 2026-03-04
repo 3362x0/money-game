@@ -1061,6 +1061,10 @@ function spawnConfetti(){
 </script>
 
 <script>
+  // 禁用雙擊（避免誤動作：文字選取、縮放）
+  document.addEventListener('dblclick', e => e.preventDefault());
+  // 禁用長按選單（iOS Safari）
+  document.addEventListener('contextmenu', e => e.preventDefault());
   // 禁止 iOS Safari pinch-to-zoom（iOS 10+ 忽略 viewport user-scalable）
   document.addEventListener('gesturestart', function(e){ e.preventDefault(); });
   document.addEventListener('gesturechange', function(e){ e.preventDefault(); });

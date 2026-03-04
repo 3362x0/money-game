@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 <title>小小換錢王 💰</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3/css/all/all.css">
 <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@2/dist/lottie-player.js"></script>
 <!-- OpenMoji: 輕量自製 parser，無需額外 JS library -->
 <style>
@@ -169,8 +170,7 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 .total-stars-box .star-num{font-size:40px;}
 .total-stars-box .star-lbl{font-size:13px;color:var(--muted);font-weight:700;}
 /* Icons */
-.icon{width:1.2em;height:1.2em;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
-.icon-filled{fill:currentColor;stroke:none;}
+.icon{font-size:1.2em;line-height:1;display:inline-flex;align-items:center;vertical-align:middle;}
 /* Shimmer */
 .progress-fill::after{content:'';position:absolute;top:0;left:0;width:60px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);animation:shimmer 1.8s infinite;}
 @keyframes shimmer{0%{transform:translateX(-100px)}100%{transform:translateX(400px)}}
@@ -181,13 +181,7 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 /* Reduced Motion */
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}}
 </style>
-<svg style="display:none">
-  <symbol id="icon-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
-  <symbol id="icon-chevron-right" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
-  <symbol id="icon-rotate-ccw" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></symbol>
-  <symbol id="icon-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
-  <symbol id="icon-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
-</svg>
+<!-- Flaticon Uicons 取代 inline SVG symbols -->
 </head>
 <body>
 <div id="floatingDeco"></div>
@@ -209,20 +203,20 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
   <div class="menu-card c-orange" onclick="startLearn()">
     <div class="menu-icon"><lottie-player src="https://assets-v2.lottiefiles.com/a/ccb8811a-116a-11ee-9bc1-f7156a9e0cf3/psCBDdm7J5.json" autoplay loop></lottie-player></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--orange)">認識錢幣</div><div class="menu-desc">點擊看看每張鈔票是多少錢</div></div>
-    <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
+    <div style="font-size:18px;color:var(--muted)"><i class="fi fi-rr-angle-right icon"></i></div>
   </div>
   <div class="menu-card c-teal" onclick="startExchange()">
     <div class="menu-icon"><lottie-player src="https://assets-v2.lottiefiles.com/a/8d7a524c-1176-11ee-88b2-5f4ca597f138/u8qZdCQaHc.json" autoplay loop></lottie-player></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--teal)">換換看</div><div class="menu-desc">大鈔可以換幾張小鈔？</div></div>
-    <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
+    <div style="font-size:18px;color:var(--muted)"><i class="fi fi-rr-angle-right icon"></i></div>
   </div>
   <div class="menu-card c-purple" onclick="startCount()">
     <div class="menu-icon"><lottie-player src="https://assets-v2.lottiefiles.com/a/493f207f-eac1-4a02-a6e8-fc798d445d84/pn9NjfY8WY.json" autoplay loop></lottie-player></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--purple)">算算看</div><div class="menu-desc">用鈔票硬幣湊出指定金額</div></div>
-    <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
+    <div style="font-size:18px;color:var(--muted)"><i class="fi fi-rr-angle-right icon"></i></div>
   </div>
   <div class="total-stars-box">
-    <div class="star-num"><svg class="icon icon-filled" style="color:#FFD93D"><use href="#icon-star"/></svg> <span id="totalStars">0</span></div>
+    <div class="star-num"><i class="fi fi-ss-star icon" style="color:#FFD93D"></i> <span id="totalStars">0</span></div>
     <div class="star-lbl">累計星星</div>
   </div>
 </div>
@@ -230,7 +224,7 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 <!-- LEARN -->
 <div class="screen" id="screen-learn">
   <div class="game-header">
-    <button class="btn-back" onclick="goMenu()"><svg class="icon"><use href="#icon-arrow-left"/></svg></button>
+    <button class="btn-back" onclick="goMenu()"><i class="fi fi-rr-arrow-left icon"></i></button>
     <div style="font-size:20px;font-weight:900;flex:1;text-align:center">認識錢幣 📖</div>
     <div style="width:44px"></div>
   </div>
@@ -242,9 +236,9 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 <!-- EXCHANGE GAME -->
 <div class="screen" id="screen-game">
   <div class="game-header">
-    <button class="btn-back" onclick="goMenu()"><svg class="icon"><use href="#icon-arrow-left"/></svg></button>
+    <button class="btn-back" onclick="goMenu()"><i class="fi fi-rr-arrow-left icon"></i></button>
     <div class="progress-wrap"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
-    <div class="stars-badge"><svg class="icon icon-filled" style="color:#FFD93D"><use href="#icon-star"/></svg> <span id="gameStars">0</span></div>
+    <div class="stars-badge"><i class="fi fi-ss-star icon" style="color:#FFD93D"></i> <span id="gameStars">0</span></div>
   </div>
   <div class="question-card" id="phaseShow">
     <div class="question-text" id="qText">loading…</div>
@@ -265,9 +259,9 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 <!-- COUNT GAME -->
 <div class="screen" id="screen-count">
   <div class="game-header">
-    <button class="btn-back" onclick="goMenu()"><svg class="icon"><use href="#icon-arrow-left"/></svg></button>
+    <button class="btn-back" onclick="goMenu()"><i class="fi fi-rr-arrow-left icon"></i></button>
     <div style="font-size:20px;font-weight:900;flex:1;text-align:center">算算看 🧮</div>
-    <div class="stars-badge"><svg class="icon icon-filled" style="color:#FFD93D"><use href="#icon-star"/></svg> <span id="countStars">0</span></div>
+    <div class="stars-badge"><i class="fi fi-ss-star icon" style="color:#FFD93D"></i> <span id="countStars">0</span></div>
   </div>
   <div class="target-card"><div class="target-lbl">目標金額</div><div class="target-num" id="targetNum">—</div></div>
   <div class="current-card">現在湊了：<span class="current-num" id="currentNum">0</span> 元</div>
@@ -276,8 +270,8 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
   <div style="font-size:12px;font-weight:700;color:#aaa;text-align:center">已選（點一下移除）</div>
   <div class="selected-pile" id="selPile"></div>
   <div class="btn-row">
-    <button class="btn-clear-sm" onclick="clearSel()"><svg class="icon"><use href="#icon-rotate-ccw"/></svg> 清除</button>
-    <button class="btn-action btn-green" style="flex:1;padding:14px 20px;font-size:20px" onclick="checkCount()"><svg class="icon"><use href="#icon-check"/></svg> 確認答案</button>
+    <button class="btn-clear-sm" onclick="clearSel()"><i class="fi fi-rr-rotate-left icon"></i> 清除</button>
+    <button class="btn-action btn-green" style="flex:1;padding:14px 20px;font-size:20px" onclick="checkCount()"><i class="fi fi-rr-check icon"></i> 確認答案</button>
   </div>
 </div>
 
@@ -295,7 +289,7 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
     <div class="celeb-emoji" id="celebEmoji">🎉</div>
     <div class="celeb-title" id="celebTitle">太棒了！</div>
     <div class="celeb-sub" id="celebSub">你答對了！</div>
-    <button class="btn-action btn-orange" onclick="nextChallenge()">繼續 <svg class="icon"><use href="#icon-chevron-right"/></svg></button>
+    <button class="btn-action btn-orange" onclick="nextChallenge()">繼續 <i class="fi fi-rr-angle-right icon"></i></button>
   </div>
 </div>
 

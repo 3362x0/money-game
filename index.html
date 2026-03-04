@@ -5,29 +5,36 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 <title>小小換錢王 💰</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/twemoji@14.0.2/dist/twemoji.min.js" crossorigin="anonymous"></script>
 <style>
 :root {
   --orange:#FF6B35; --teal:#4ECDC4; --yellow:#FFD93D;
   --green:#6BCB77;  --red:#FF6B6B;  --purple:#9B5DE5;
   --indigo:#4F46E5; --text:#2D3436; --muted:#636e72;
   --white:#FFFFFF;
+  --bg-warm:#FFF9F0;
   --shadow:0 6px 24px rgba(0,0,0,0.14);
   --shadow-sm:0 3px 12px rgba(0,0,0,0.09);
-  --radius:22px; --radius-sm:12px;
+  --clay-outer:0 8px 20px rgba(0,0,0,0.10), 0 2px 6px rgba(0,0,0,0.06);
+  --clay-inner:inset 0 -4px 0 rgba(0,0,0,0.08);
+  --clay-hover:0 12px 28px rgba(0,0,0,0.14), 0 4px 8px rgba(0,0,0,0.08);
+  --radius:20px; --radius-sm:12px;
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{overscroll-behavior:none;overscroll-behavior-y:none;}
 body{
   font-family:'Nunito','Noto Sans TC',sans-serif;
-  background:linear-gradient(155deg,#FFF8E7 0%,#E8F4FD 100%);
+  background:var(--bg-warm);
   min-height:100vh;min-height:100dvh;
-  color:var(--text);user-select:none;overflow-x:hidden;
+  color:var(--text);user-select:none;overflow-x:hidden;touch-action:manipulation;
 }
 .screen{
   display:none;flex-direction:column;align-items:center;
   min-height:100vh;min-height:100dvh;
-  padding:24px 18px 32px;animation:fadeUp .3s ease;
+  padding:24px 18px 32px;
 }
-.screen.active{display:flex;}
+.screen.active{display:flex;animation:pageEnter 0.3s cubic-bezier(0.34, 1.2, 0.64, 1);}
+@keyframes pageEnter{from{opacity:0;transform:translateY(20px) scale(0.97)}to{opacity:1;transform:translateY(0) scale(1)}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)}}
 
 /* Deco */
@@ -37,56 +44,71 @@ body{
 
 /* Welcome */
 #screen-welcome{justify-content:center;text-align:center;gap:22px;position:relative;z-index:1;}
-.mascot{font-size:88px;animation:mascotBounce 1.8s ease-in-out infinite;display:block;}
+.mascot{font-size:88px;animation:mascotBounce 1.8s ease-in-out infinite;display:block;line-height:1;}
+.mascot img{width:88px!important;height:88px!important;vertical-align:middle!important;}
 @keyframes mascotBounce{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-14px) rotate(4deg)}}
 .welcome-title{font-size:36px;font-weight:900;color:var(--orange);text-shadow:3px 3px 0 rgba(255,107,53,.18);line-height:1.15;}
 .welcome-title span{color:var(--teal);}
 .welcome-sub{font-size:17px;font-weight:700;color:var(--muted);}
 
 /* Buttons */
-.btn-primary{background:linear-gradient(135deg,var(--orange),#FF8C42);color:#fff;border:none;border-radius:50px;padding:18px 52px;font-size:22px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 6px 22px rgba(255,107,53,.42);transition:transform .15s,box-shadow .15s;}
-.btn-primary:active{transform:scale(.95);}
-.btn-action{border:none;border-radius:50px;padding:16px 40px;font-size:22px;font-weight:900;font-family:inherit;cursor:pointer;width:100%;transition:transform .15s;}
-.btn-action:active{transform:scale(.97);}
+.btn-primary{background:linear-gradient(135deg,var(--orange),#FF8C42);color:#fff;border:none;border-radius:50px;padding:18px 52px;font-size:22px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:0 5px 0 rgba(0,0,0,0.15), var(--clay-outer);transition:transform 0.1s ease,box-shadow 0.1s ease;}
+.btn-primary:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,0.15);}
+.btn-action{border:none;border-radius:50px;padding:16px 40px;font-size:22px;font-weight:900;font-family:inherit;cursor:pointer;width:100%;box-shadow:0 5px 0 rgba(0,0,0,0.15), var(--clay-outer);transition:transform 0.1s ease,box-shadow 0.1s ease;}
+.btn-action:active{transform:translateY(4px);box-shadow:0 1px 0 rgba(0,0,0,0.15);}
 .btn-action:disabled{opacity:.5;cursor:not-allowed;}
-.btn-teal{background:linear-gradient(135deg,var(--teal),#3AB7B0);color:#fff;box-shadow:0 6px 20px rgba(78,205,196,.42);}
-.btn-green{background:linear-gradient(135deg,var(--green),#52b788);color:#fff;box-shadow:0 6px 20px rgba(107,203,119,.42);}
-.btn-orange{background:linear-gradient(135deg,var(--orange),#FF8C42);color:#fff;box-shadow:0 6px 20px rgba(255,107,53,.42);}
+.btn-teal{background:linear-gradient(135deg,var(--teal),#3AB7B0);color:#fff;}
+.btn-green{background:linear-gradient(135deg,var(--green),#52b788);color:#fff;}
+.btn-orange{background:linear-gradient(135deg,var(--orange),#FF8C42);color:#fff;}
 
 /* Menu */
-#screen-menu{gap:14px;max-width:430px;width:100%;margin:0 auto;position:relative;z-index:1;}
+#screen-menu{gap:14px;max-width:430px;width:100%;margin:0 auto;position:relative;z-index:1;align-items:stretch;}
 .menu-header{text-align:center;margin-bottom:6px;}
 .menu-header h2{font-size:26px;font-weight:900;}
 .menu-header p{font-size:14px;color:var(--muted);font-weight:700;}
-.menu-card{background:var(--white);border-radius:var(--radius);padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:var(--shadow);border:3px solid transparent;transition:transform .15s,border-color .15s;}
+.menu-card{background:var(--white);border-radius:var(--radius);padding:0 20px;display:flex;align-items:center;gap:14px;cursor:pointer;box-shadow:var(--clay-outer), var(--clay-inner);border:2px solid rgba(0,0,0,0.04);transition:transform 0.2s ease,border-color .15s,box-shadow 0.2s ease;height:88px;width:100%;overflow:hidden;box-sizing:border-box;}
+.menu-card:hover{transform:translateY(-4px);box-shadow:var(--clay-hover);}
 .menu-card:active{transform:scale(.97);}
 .menu-card.c-orange{border-color:var(--orange);}
 .menu-card.c-teal{border-color:var(--teal);}
 .menu-card.c-purple{border-color:var(--purple);}
-.menu-icon{font-size:46px;}.menu-info{flex:1;}
-.menu-title{font-size:20px;font-weight:900;}.menu-desc{font-size:13px;color:var(--muted);font-weight:700;}
+.menu-icon{width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.menu-icon img{width:52px;height:52px;object-fit:contain;}
+.menu-info{flex:1;}
+.menu-title{font-size:20px;font-weight:900;white-space:nowrap;}
+.menu-desc{font-size:13px;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* Twemoji 全局 */
+img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
+.mascot img.emoji{width:88px!important;height:88px!important;vertical-align:middle;}
+.celeb-emoji img.emoji{width:64px!important;height:64px!important;}
+.done-emoji img.emoji{width:76px!important;height:76px!important;}
 
 /* Game header */
 .game-header{display:flex;align-items:center;width:100%;gap:12px;margin-bottom:4px;}
 .btn-back{background:var(--white);border:none;border-radius:50%;width:44px;height:44px;font-size:20px;cursor:pointer;box-shadow:var(--shadow-sm);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:transform .15s;}
 .btn-back:active{transform:scale(.9);}
-.progress-wrap{flex:1;background:rgba(0,0,0,.1);border-radius:50px;height:13px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:50px;transition:width .5s ease;}
+.progress-wrap{flex:1;background:rgba(0,0,0,.1);border-radius:50px;height:13px;overflow:hidden;position:relative;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--orange),var(--yellow));border-radius:50px;transition:width .5s ease;position:relative;overflow:hidden;}
 .stars-badge{font-size:18px;font-weight:900;color:var(--yellow);text-shadow:1px 1px 0 rgba(0,0,0,.2);min-width:58px;text-align:right;}
 
 /* Learn */
 #screen-learn{gap:14px;max-width:430px;width:100%;margin:0 auto;position:relative;z-index:1;}
-.learn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;}
-.learn-card{background:var(--white);border-radius:var(--radius);padding:18px 12px;display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;box-shadow:var(--shadow);border:3px solid transparent;transition:transform .2s,border-color .2s;}
+.learn-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;align-items:stretch;}
+.learn-card{background:var(--white);border-radius:var(--radius);padding:14px 12px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;box-shadow:var(--clay-outer), var(--clay-inner);border:2px solid rgba(0,0,0,0.04);transition:transform .2s,border-color .2s;}
 .learn-card:active{transform:scale(.95);}
 .learn-card.active{border-color:var(--orange);}
-.learn-val{font-size:26px;font-weight:900;}
-.learn-tw{font-size:12px;color:var(--muted);font-weight:700;}
+/* 統一圖片區塊高度 */
+.learn-img-box{width:100%;height:80px;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.learn-img-box img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px;}
+.learn-img-box .coin-wrap{width:72px;height:72px;border-radius:50%;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.3);}
+.learn-img-box .coin-wrap img{width:100%;height:100%;object-fit:cover;display:block;}
+.learn-val{font-size:22px;font-weight:900;}
+.learn-tw{font-size:11px;color:var(--muted);font-weight:700;}
 .learn-tip{background:var(--white);border-radius:var(--radius);padding:14px 18px;text-align:center;box-shadow:var(--shadow);width:100%;font-size:16px;font-weight:800;color:var(--indigo);min-height:56px;display:flex;align-items:center;justify-content:center;}
 
 /* Exchange game */
 #screen-game{gap:14px;max-width:430px;width:100%;margin:0 auto;position:relative;z-index:1;}
-.question-card{background:var(--white);border-radius:var(--radius);padding:20px 18px;width:100%;text-align:center;box-shadow:var(--shadow);}
+.question-card{background:var(--white);border-radius:var(--radius);padding:20px 18px;width:100%;text-align:center;box-shadow:var(--clay-outer), var(--clay-inner);border:2px solid rgba(0,0,0,0.04);}
 .question-text{font-size:19px;font-weight:800;margin-bottom:16px;}
 .from-area{display:flex;justify-content:center;margin-bottom:12px;}
 .arrow-bounce{font-size:34px;animation:arrowPulse 1s ease-in-out infinite;margin:2px 0;}
@@ -101,7 +123,7 @@ body{
 .options-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;width:100%;}
 .opt-btn{background:var(--white);border:3px solid #e0e0e0;border-radius:var(--radius-sm);padding:18px;font-size:28px;font-weight:900;font-family:inherit;cursor:pointer;box-shadow:var(--shadow-sm);transition:transform .15s,border-color .15s;color:var(--text);}
 .opt-btn:active{transform:scale(.95);}
-.opt-btn.correct{background:#EDFFF1;border-color:var(--green);color:#2D7D3A;animation:wiggle .5s ease;}
+.opt-btn.correct{background:linear-gradient(135deg, #EDFFF1, #C8FFD4);border-color:var(--green);color:#2D7D3A;animation:correctBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);}
 .opt-btn.wrong{background:#FFF0F0;border-color:var(--red);color:#C0392B;animation:shake .4s ease;}
 @keyframes wiggle{0%,100%{transform:scale(1)}25%{transform:scale(1.1) rotate(-3deg)}75%{transform:scale(1.1) rotate(3deg)}}
 @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
@@ -110,9 +132,9 @@ body{
 #screen-count{gap:12px;max-width:430px;width:100%;margin:0 auto;position:relative;z-index:1;}
 .target-card{background:linear-gradient(135deg,var(--purple),#C77DFF);color:#fff;border-radius:var(--radius);padding:18px;text-align:center;width:100%;box-shadow:0 6px 22px rgba(155,93,229,.42);}
 .target-lbl{font-size:15px;font-weight:700;opacity:.88;}.target-num{font-size:52px;font-weight:900;line-height:1;}
-.current-card{background:var(--white);border-radius:var(--radius-sm);padding:12px 20px;text-align:center;width:100%;box-shadow:var(--shadow-sm);font-size:18px;font-weight:800;}
+.current-card{background:var(--white);border-radius:var(--radius-sm);padding:12px 20px;text-align:center;width:100%;box-shadow:var(--clay-outer), var(--clay-inner);border:2px solid rgba(0,0,0,0.04);font-size:18px;font-weight:800;}
 .current-num{font-size:34px;font-weight:900;color:var(--orange);}
-.palette{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;width:100%;}
+.palette{display:flex;flex-direction:column;gap:8px;width:100%;}
 .palette-item{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;transition:transform .15s;}
 .palette-item:active{transform:scale(.88);}
 .palette-lbl{font-size:11px;font-weight:800;color:var(--muted);}
@@ -127,7 +149,8 @@ body{
 #celebration{position:fixed;inset:0;background:rgba(0,0,0,.52);display:none;align-items:center;justify-content:center;z-index:200;}
 #celebration.active{display:flex;}
 .celeb-card{background:#fff;border-radius:32px;padding:40px 32px;text-align:center;max-width:320px;width:90%;animation:popIn .4s cubic-bezier(.34,1.56,.64,1);}
-.celeb-emoji{font-size:68px;margin-bottom:10px;}
+.celeb-emoji{font-size:68px;margin-bottom:10px;line-height:1;}
+.celeb-emoji img{width:72px!important;height:72px!important;vertical-align:middle!important;}
 .celeb-title{font-size:32px;font-weight:900;color:var(--orange);margin-bottom:6px;}
 .celeb-sub{font-size:17px;font-weight:700;color:var(--muted);margin-bottom:22px;}
 .confetti{position:fixed;border-radius:2px;animation:confettiFall linear forwards;pointer-events:none;z-index:300;}
@@ -135,14 +158,34 @@ body{
 
 /* Done */
 #screen-done{justify-content:center;text-align:center;gap:22px;position:relative;z-index:1;}
-.done-emoji{font-size:80px;animation:mascotBounce 2s infinite;}
+.done-emoji{font-size:80px;animation:mascotBounce 2s infinite;line-height:1;}
+.done-emoji img{width:80px!important;height:80px!important;vertical-align:middle!important;}
 .done-title{font-size:34px;font-weight:900;color:var(--orange);}
 .done-sub{font-size:18px;font-weight:700;color:var(--muted);}
 .welcome-hint{font-size:13px;color:#bbb;font-weight:700;}
 .total-stars-box{margin-top:auto;padding-top:16px;text-align:center;}
 .total-stars-box .star-num{font-size:40px;}
 .total-stars-box .star-lbl{font-size:13px;color:var(--muted);font-weight:700;}
+/* Icons */
+.icon{width:1.2em;height:1.2em;vertical-align:middle;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+.icon-filled{fill:currentColor;stroke:none;}
+/* Shimmer */
+.progress-fill::after{content:'';position:absolute;top:0;left:0;width:60px;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.5),transparent);animation:shimmer 1.8s infinite;}
+@keyframes shimmer{0%{transform:translateX(-100px)}100%{transform:translateX(400px)}}
+/* Stagger */
+@keyframes staggerIn{from{opacity:0;transform:translateY(24px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+/* Correct Bounce */
+@keyframes correctBounce{0%{transform:scale(1)}30%{transform:scale(1.12)}60%{transform:scale(0.96)}100%{transform:scale(1)}}
+/* Reduced Motion */
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}}
 </style>
+<svg style="display:none">
+  <symbol id="icon-arrow-left" viewBox="0 0 24 24"><path d="M19 12H5M12 19l-7-7 7-7"/></symbol>
+  <symbol id="icon-chevron-right" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></symbol>
+  <symbol id="icon-rotate-ccw" viewBox="0 0 24 24"><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></symbol>
+  <symbol id="icon-check" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></symbol>
+  <symbol id="icon-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></symbol>
+</svg>
 </head>
 <body>
 <div id="floatingDeco"></div>
@@ -154,30 +197,30 @@ body{
     <div class="welcome-title">小小換錢王<br><span>💰 開心學台幣</span></div>
   </div>
   <div class="welcome-sub">點一點，換一換，輕鬆學換算！</div>
-  <button class="btn-primary" onclick="goMenu()">開始遊戲 🎮</button>
+  <button class="btn-primary" onclick="goMenu()">開始遊戲</button>
   <div class="welcome-hint">（首次點擊會開啟音效）</div>
 </div>
 
 <!-- MENU -->
 <div class="screen" id="screen-menu">
-  <div class="menu-header"><h2>選擇關卡 🎯</h2><p>你想玩哪一個？</p></div>
+  <div class="menu-header"><h2>選擇關卡</h2><p>你想玩哪一個？</p></div>
   <div class="menu-card c-orange" onclick="startLearn()">
-    <div class="menu-icon">📖</div>
+    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f4d6.svg" alt="📖"></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--orange)">認識錢幣</div><div class="menu-desc">點擊看看每張鈔票是多少錢</div></div>
-    <div>▶</div>
+    <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
   </div>
   <div class="menu-card c-teal" onclick="startExchange()">
-    <div class="menu-icon">🔄</div>
+    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f504.svg" alt="🔄"></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--teal)">換換看</div><div class="menu-desc">大鈔可以換幾張小鈔？</div></div>
-    <div>▶</div>
+    <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
   </div>
   <div class="menu-card c-purple" onclick="startCount()">
-    <div class="menu-icon">🧮</div>
-    <div class="menu-info"><div class="menu-title" style="color:var(--purple)">湊湊看</div><div class="menu-desc">用鈔票硬幣湊出指定金額</div></div>
-    <div>▶</div>
+    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/1f9ee.svg" alt="🧮"></div>
+    <div class="menu-info"><div class="menu-title" style="color:var(--purple)">算算看</div><div class="menu-desc">用鈔票硬幣湊出指定金額</div></div>
+    <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
   </div>
   <div class="total-stars-box">
-    <div class="star-num">⭐ <span id="totalStars">0</span></div>
+    <div class="star-num"><svg class="icon icon-filled" style="color:#FFD93D"><use href="#icon-star"/></svg> <span id="totalStars">0</span></div>
     <div class="star-lbl">累計星星</div>
   </div>
 </div>
@@ -185,7 +228,7 @@ body{
 <!-- LEARN -->
 <div class="screen" id="screen-learn">
   <div class="game-header">
-    <button class="btn-back" onclick="goMenu()">←</button>
+    <button class="btn-back" onclick="goMenu()"><svg class="icon"><use href="#icon-arrow-left"/></svg></button>
     <div style="font-size:20px;font-weight:900;flex:1;text-align:center">認識錢幣 📖</div>
     <div style="width:44px"></div>
   </div>
@@ -197,9 +240,9 @@ body{
 <!-- EXCHANGE GAME -->
 <div class="screen" id="screen-game">
   <div class="game-header">
-    <button class="btn-back" onclick="goMenu()">←</button>
+    <button class="btn-back" onclick="goMenu()"><svg class="icon"><use href="#icon-arrow-left"/></svg></button>
     <div class="progress-wrap"><div class="progress-fill" id="progressBar" style="width:0%"></div></div>
-    <div class="stars-badge">⭐ <span id="gameStars">0</span></div>
+    <div class="stars-badge"><svg class="icon icon-filled" style="color:#FFD93D"><use href="#icon-star"/></svg> <span id="gameStars">0</span></div>
   </div>
   <div class="question-card" id="phaseShow">
     <div class="question-text" id="qText">loading…</div>
@@ -220,9 +263,9 @@ body{
 <!-- COUNT GAME -->
 <div class="screen" id="screen-count">
   <div class="game-header">
-    <button class="btn-back" onclick="goMenu()">←</button>
-    <div style="font-size:20px;font-weight:900;flex:1;text-align:center">湊湊看 🧮</div>
-    <div class="stars-badge">⭐ <span id="countStars">0</span></div>
+    <button class="btn-back" onclick="goMenu()"><svg class="icon"><use href="#icon-arrow-left"/></svg></button>
+    <div style="font-size:20px;font-weight:900;flex:1;text-align:center">算算看 🧮</div>
+    <div class="stars-badge"><svg class="icon icon-filled" style="color:#FFD93D"><use href="#icon-star"/></svg> <span id="countStars">0</span></div>
   </div>
   <div class="target-card"><div class="target-lbl">目標金額</div><div class="target-num" id="targetNum">—</div></div>
   <div class="current-card">現在湊了：<span class="current-num" id="currentNum">0</span> 元</div>
@@ -231,8 +274,8 @@ body{
   <div style="font-size:12px;font-weight:700;color:#aaa;text-align:center">已選（點一下移除）</div>
   <div class="selected-pile" id="selPile"></div>
   <div class="btn-row">
-    <button class="btn-clear-sm" onclick="clearSel()">清除</button>
-    <button class="btn-action btn-green" style="flex:1;padding:14px 20px;font-size:20px" onclick="checkCount()">確認答案 ✓</button>
+    <button class="btn-clear-sm" onclick="clearSel()"><svg class="icon"><use href="#icon-rotate-ccw"/></svg> 清除</button>
+    <button class="btn-action btn-green" style="flex:1;padding:14px 20px;font-size:20px" onclick="checkCount()"><svg class="icon"><use href="#icon-check"/></svg> 確認答案</button>
   </div>
 </div>
 
@@ -250,11 +293,17 @@ body{
     <div class="celeb-emoji" id="celebEmoji">🎉</div>
     <div class="celeb-title" id="celebTitle">太棒了！</div>
     <div class="celeb-sub" id="celebSub">你答對了！</div>
-    <button class="btn-action btn-orange" onclick="nextChallenge()">繼續 ▶</button>
+    <button class="btn-action btn-orange" onclick="nextChallenge()">繼續 <svg class="icon"><use href="#icon-chevron-right"/></svg></button>
   </div>
 </div>
 
 <script>
+// 頁面載入後立即套用 Twemoji
+document.addEventListener('DOMContentLoaded',()=>{
+  twemoji.parse(document.body,{folder:'svg',ext:'.svg',
+    attributes:()=>({style:'width:1.2em;height:1.2em;vertical-align:-0.15em;object-fit:contain;display:inline-block;'})});
+});
+
 /* ============================================================
    AUDIO ENGINE
 ============================================================ */
@@ -289,11 +338,88 @@ function startBg(){
 }
 
 /* ============================================================
-   TAIWAN CURRENCY SVG RENDERER
-   真實台幣圖示化 - 對應現行流通幣值
+   TAIWAN CURRENCY IMAGE RENDERER
+   使用真實台幣照片
 ============================================================ */
 
-/* ── 紙鈔 SVG ── */
+/* ── 尺寸對照表 ── */
+const BILL_SIZES = {xl:{w:280,h:140}, md:{w:90,h:51}, sm:{w:70,h:40}, xs:{w:58,h:33}};
+const COIN_SIZES = {xl:72, md:52, sm:42, xs:34};
+
+function makeDenomEl(v, sizeKey) {
+  const d = DENOMS.find(x=>x.v===v);
+  if (!d) return document.createElement('div');
+
+  if (d.type === 'bill') {
+    // 'learn' → 全寬展示，其他用固定尺寸
+    if (sizeKey === 'learn') {
+      const wrap = document.createElement('div');
+      wrap.style.cssText = `
+        width:100%; border-radius:8px; overflow:hidden;
+        box-shadow:0 4px 14px rgba(0,0,0,.3);
+        flex-shrink:0; display:block;
+      `;
+      const img = document.createElement('img');
+      img.src = `imgs/${v}.jpg`;
+      img.style.cssText = 'width:100%;height:auto;display:block;';
+      img.alt = d.label;
+      wrap.appendChild(img);
+      return wrap;
+    }
+    const {w,h} = BILL_SIZES[sizeKey] || BILL_SIZES.md;
+    const wrap = document.createElement('div');
+    wrap.style.cssText = `
+      width:${w}px; height:auto; position:relative;
+      border-radius:7px; overflow:hidden;
+      box-shadow:0 4px 14px rgba(0,0,0,.35);
+      flex-shrink:0; display:inline-block;
+    `;
+    const img = document.createElement('img');
+    img.src = `imgs/${v}.jpg`;
+    img.style.cssText = 'width:100%;height:auto;display:block;';
+    img.alt = d.label;
+    wrap.appendChild(img);
+    // xs/sm 加面額小標
+    if (sizeKey === 'xs' || sizeKey === 'sm') {
+      const lbl = document.createElement('div');
+      lbl.textContent = v;
+      lbl.style.cssText = `
+        position:absolute; bottom:2px; left:4px;
+        background:rgba(0,0,0,.55); color:white;
+        border-radius:4px; padding:1px 5px;
+        font-size:${sizeKey==='xs'?'8':'9'}px; font-weight:900;
+        font-family:'Nunito',sans-serif; line-height:1.4;
+      `;
+      wrap.appendChild(lbl);
+    }
+    return wrap;
+
+  } else {
+    // 硬幣
+    const isLearn = sizeKey === 'learn';
+    const s = isLearn ? 90 : (COIN_SIZES[sizeKey] || COIN_SIZES.md);
+    const wrap = document.createElement('div');
+    wrap.style.cssText = `
+      width:${s}px; height:${s}px; position:relative;
+      border-radius:50%; overflow:hidden;
+      box-shadow:0 4px 12px rgba(0,0,0,.35);
+      flex-shrink:0; display:inline-block;
+    `;
+    const img = document.createElement('img');
+    img.src = `imgs/${v}.jpg`;
+    img.alt = d.label;
+    // NT$50 圖是正反面並排（320×160），只顯示左半（正面）
+    if (v === 50) {
+      img.style.cssText = 'width:200%;height:100%;object-fit:cover;object-position:left center;display:block;';
+    } else {
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+    }
+    wrap.appendChild(img);
+    return wrap;
+  }
+}
+
+/* ── 以下 SVG 定義已不再使用（保留供備用）── */
 // NT$1000 壹仟元：藍綠色，玉山山脈
 const SVG_1000 = (w,h) => `
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 113" width="${w}" height="${h}" style="display:block;border-radius:7px;box-shadow:0 4px 14px rgba(0,0,0,.3)">
@@ -522,29 +648,10 @@ const SVG_1 = (s) => `
   <text x="50" y="70" text-anchor="middle" font-family="sans-serif" font-size="9" fill="rgba(255,255,255,0.75)">元</text>
 </svg>`;
 
-/* ── 尺寸對照表 ── */
-const BILL_SIZES = {xl:{w:170,h:96}, md:{w:90,h:51}, sm:{w:70,h:40}, xs:{w:58,h:33}};
-const COIN_SIZES = {xl:72, md:52, sm:42, xs:34};
-
 const SVG_MAKERS = {
   1000: SVG_1000, 500: SVG_500, 200: SVG_200, 100: SVG_100,
   50: SVG_50,     10:  SVG_10,  5:   SVG_5,   1:   SVG_1
 };
-
-function makeDenomEl(v, sizeKey) {
-  const fn = SVG_MAKERS[v];
-  if (!fn) return document.createElement('div');
-  const d = DENOMS.find(x=>x.v===v);
-  const wrapper = document.createElement('div');
-  if (d.type === 'bill') {
-    const {w,h} = BILL_SIZES[sizeKey] || BILL_SIZES.md;
-    wrapper.innerHTML = fn(w, h);
-  } else {
-    const s = COIN_SIZES[sizeKey] || COIN_SIZES.md;
-    wrapper.innerHTML = fn(s);
-  }
-  return wrapper.firstElementChild;
-}
 
 /* ============================================================
    DATA
@@ -560,20 +667,52 @@ const DENOMS = [
   {v:1,   type:'coin',label:'1元',   tw:'壹元',   tips:'最小的銀色硬幣，1元1元慢慢存！',clr:['#90A4AE','#78909C']},
 ];
 
-const EXCHANGE_Q = [
-  {from:1000,to:100,ans:10},
-  {from:500, to:100,ans:5},
-  {from:100, to:10, ans:10},
-  {from:1000,to:500,ans:2},
-  {from:100, to:50, ans:2},
-  {from:50,  to:10, ans:5},
-  {from:1000,to:100,ans:10},
+// 所有合法換算組合（ans ≤ 12，動畫不會太長）
+const ALL_EXCHANGE_PAIRS = [
+  {from:1000,to:500, ans:2},
+  {from:1000,to:200, ans:5},
+  {from:1000,to:100, ans:10},
+  {from:500, to:100, ans:5},
+  {from:500, to:50,  ans:10},
+  {from:200, to:100, ans:2},
+  {from:200, to:50,  ans:4},
+  {from:100, to:50,  ans:2},
+  {from:100, to:10,  ans:10},
+  {from:50,  to:10,  ans:5},
+  {from:10,  to:5,   ans:2},
+  {from:10,  to:1,   ans:10},
+  {from:5,   to:1,   ans:5},
 ];
 
-const COUNT_Q = [
-  {target:150},{target:250},{target:360},
-  {target:550},{target:1100},{target:1050},
-];
+// 洗牌
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}
+  return a;
+}
+
+// 隨機產生「算算看」目標金額（100~1500 之間，不超過 20 步能湊出）
+function genCountTarget() {
+  const pools = [
+    [1000,1,1],[500,1,1],[200,1,2],[100,1,5],[50,1,5],[10,1,9]
+  ];
+  for(let attempt=0;attempt<20;attempt++){
+    // 隨機挑 2~4 種面值，組合出目標
+    const shuffled = shuffle(pools);
+    const picked = shuffled.slice(0, 2+Math.floor(Math.random()*3));
+    let total = 0;
+    picked.forEach(([v,min,max])=>{
+      const cnt = min + Math.floor(Math.random()*(max-min+1));
+      total += v * cnt;
+    });
+    if(total>=100 && total<=1500) return total;
+  }
+  return 350; // fallback
+}
+
+// 動態題庫（每次遊戲開始時重新產生）
+let EXCHANGE_Q = [];
+let COUNT_TARGETS = [];
 
 /* ============================================================
    STATE
@@ -591,12 +730,23 @@ function delay(ms){return new Promise(r=>setTimeout(r,ms));}
 ============================================================ */
 function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const el=document.getElementById(id);
+  el.classList.add('active');
+  // 套用 Twemoji（讓所有 emoji 變成可愛圖片）
+  twemoji.parse(el,{folder:'svg',ext:'.svg',
+    attributes:()=>({style:'width:1.2em;height:1.2em;vertical-align:-0.15em;object-fit:contain;'})});
 }
 function goMenu(){
   initAudio();sfxClick();
   document.getElementById('totalStars').textContent=S.gameStars+S.countStars;
   showScreen('screen-menu');
+  document.querySelectorAll('.menu-card').forEach((card, i) => {
+    card.style.opacity = '0';
+    card.style.animation = 'none';
+    requestAnimationFrame(() => {
+      card.style.animation = `staggerIn 0.35s cubic-bezier(0.34, 1.2, 0.64, 1) ${i * 80}ms forwards`;
+    });
+  });
 }
 
 /* ── Floating Deco ── */
@@ -626,10 +776,31 @@ function startLearn(){
   DENOMS.forEach(d=>{
     const card=document.createElement('div');
     card.className='learn-card';
-    // 幣的圖示
-    const imgWrap=document.createElement('div');
-    imgWrap.appendChild(makeDenomEl(d.v,'sm'));
-    card.appendChild(imgWrap);
+    // 統一高度的圖片容器
+    const imgBox=document.createElement('div');
+    imgBox.className='learn-img-box';
+    if(d.type==='bill'){
+      const img=document.createElement('img');
+      img.src=`imgs/${d.v}.jpg`;
+      img.alt=d.label;
+      img.style.cssText='max-width:100%;max-height:80px;object-fit:contain;border-radius:6px;box-shadow:0 3px 10px rgba(0,0,0,.25);';
+      imgBox.appendChild(img);
+    } else {
+      const coinWrap=document.createElement('div');
+      coinWrap.className='coin-wrap';
+      const img=document.createElement('img');
+      img.src=`imgs/${d.v}.jpg`;
+      img.alt=d.label;
+      // NT$50 正反面並排，只顯示左半
+      if(d.v===50){
+        img.style.cssText='width:200%;height:100%;object-fit:cover;object-position:left center;display:block;';
+      } else {
+        img.style.cssText='width:100%;height:100%;object-fit:cover;display:block;';
+      }
+      coinWrap.appendChild(img);
+      imgBox.appendChild(coinWrap);
+    }
+    card.appendChild(imgBox);
     // 金額文字
     const val=document.createElement('div');
     val.className='learn-val';
@@ -647,10 +818,9 @@ function startLearn(){
       document.querySelectorAll('.learn-card').forEach(c=>c.classList.remove('active'));
       card.classList.add('active');
       document.getElementById('learnTip').textContent=d.tips;
-      // 彈跳
-      const img=imgWrap.firstChild;
-      img.style.transform='scale(1.25)';img.style.transition='transform .25s';
-      setTimeout(()=>{img.style.transform='';},300);
+      // 彈跳動畫
+      const inner=imgBox.firstChild;
+      if(inner){inner.style.transform='scale(1.06)';inner.style.transition='transform .25s';setTimeout(()=>{inner.style.transform='';},300);}
     };
     grid.appendChild(card);
   });
@@ -662,6 +832,8 @@ function startLearn(){
 ============================================================ */
 function startExchange(){
   initAudio();sfxClick();
+  // 每次遊戲隨機抽 10 題（不重複）
+  EXCHANGE_Q = shuffle(ALL_EXCHANGE_PAIRS).slice(0,10);
   S.exchIdx=0;S.gameStars=0;
   document.getElementById('gameStars').textContent=0;
   loadExchange();showScreen('screen-game');
@@ -669,65 +841,43 @@ function startExchange(){
 
 function loadExchange(){
   if(S.exchIdx>=EXCHANGE_Q.length){showAllDone();return;}
-  S.cur=EXCHANGE_Q[S.exchIdx];S.phase='show';
+  S.cur=EXCHANGE_Q[S.exchIdx];S.phase='quiz';
   const{from,to,ans}=S.cur;
   const fd=denom(from),td=denom(to);
+
   document.getElementById('progressBar').style.width=(S.exchIdx/EXCHANGE_Q.length*100)+'%';
+
+  // 題目文字
   const toLabel=td.type==='bill'?`張 ${td.label}`:`枚 ${td.label}`;
   document.getElementById('qText').textContent=`${fd.label} 可以換幾${toLabel}？`;
-  // from bill
+
+  // 顯示大鈔
   const fb=document.getElementById('fromBill');
   fb.innerHTML='';fb.appendChild(makeDenomEl(from,'xl'));
-  // to slots
+
+  // 空位（佔位用，動畫前不顯示內容）
   const ta=document.getElementById('toArea');ta.innerHTML='';
   for(let i=0;i<ans;i++){
     const slot=document.createElement('div');
     slot.className=`to-slot ${td.type==='coin'?'coin-slot':'bill-slot'}`;
     slot.id='slot'+i;ta.appendChild(slot);
   }
+
+  // 隱藏方程式 + 換按鈕 + 空槽區（選完才顯示）
   document.getElementById('eqBox').style.display='none';
-  const btn=document.getElementById('btnExchange');
-  btn.style.display='block';btn.disabled=false;
-  document.getElementById('phaseQuiz').style.display='none';
-}
-
-async function doExchange(){
-  if(S.phase!=='show')return;
-  const{from,to,ans}=S.cur;
-  const td=denom(to);
-  document.getElementById('btnExchange').disabled=true;
-  for(let i=0;i<ans;i++){
-    await delay(160);
-    const slot=document.getElementById('slot'+i);
-    if(!slot)continue;
-    slot.classList.add('filled');
-    // 縮小版幣圖
-    const el=makeDenomEl(to,'xs');
-    if(td.type==='coin'){
-      // 讓硬幣填滿 slot
-      el.style.width='40px';el.style.height='40px';
-    }
-    slot.appendChild(el);
-    sfxCoin(i);
-  }
-  await delay(350);
-  const eq=document.getElementById('eqBox');
-  eq.textContent=`${from} = ${ans} × ${to}`;eq.style.display='block';
-  sfxCoin(ans);
-  await delay(1600);showQuiz();
-}
-
-function showQuiz(){
-  S.phase='quiz';
-  const{to,ans}=S.cur;const td=denom(to);
-  const toLabel=td.type==='bill'?`張 ${td.label}`:`枚 ${td.label}`;
-  document.getElementById('quizText').textContent=`剛才換了幾${toLabel}？`;
   document.getElementById('btnExchange').style.display='none';
+  document.getElementById('toArea').style.visibility='hidden';
+  document.getElementById('toArea').style.opacity='0';
+
+  // ★ 直接顯示選擇題
+  const quizText=td.type==='bill'?`請問可以換幾張 ${td.label}？`:`請問可以換幾枚 ${td.label}？`;
+  document.getElementById('quizText').textContent=quizText;
+
   const opts=new Set([ans]);
-  const deltas=[1,2,3,4,5,8,10,15];let di=0;
+  const deltas=[1,2,3,5,8,10];let di=0;
   while(opts.size<4){
-    const d=deltas[di++]||Math.floor(Math.random()*10+1);
-    const w=ans+(Math.random()>.5?1:-1)*d;
+    const delta=deltas[di++]||Math.floor(Math.random()*8+1);
+    const w=ans+(Math.random()>.5?1:-1)*delta;
     if(w>0&&w!==ans)opts.add(w);
   }
   const grid=document.getElementById('optionsGrid');grid.innerHTML='';
@@ -739,18 +889,53 @@ function showQuiz(){
   document.getElementById('phaseQuiz').style.display='block';
 }
 
-function handleOpt(chosen,ans,btn){
-  if(S.phase!=='quiz')return;S.phase='done';
+async function handleOpt(chosen,ans,btn){
+  if(S.phase!=='quiz')return;
+  S.phase='animating';
   document.querySelectorAll('.opt-btn').forEach(b=>b.onclick=null);
-  if(chosen===ans){
+
+  const correct=(chosen===ans);
+  if(correct){
     btn.classList.add('correct');sfxCorrect();
     S.gameStars++;document.getElementById('gameStars').textContent=S.gameStars;
-    setTimeout(()=>celebrate(true,`${ans} 個！答對了！`),500);
   }else{
     btn.classList.add('wrong');
     document.querySelectorAll('.opt-btn').forEach(b=>{if(parseInt(b.textContent)===ans)b.classList.add('correct');});
-    sfxWrong();setTimeout(()=>celebrate(false,`正確答案是 ${ans} 個，繼續加油！`),800);
+    sfxWrong();
   }
+
+  // 短暫停頓讓使用者看到答案標示，再播動畫
+  await delay(700);
+  document.getElementById('phaseQuiz').style.display='none';
+  await runExchangeAnim();
+  celebrate(correct, correct?`${ans} 個！答對了！`:`正確答案是 ${ans} 個，繼續加油！`);
+}
+
+async function runExchangeAnim(){
+  const{from,to,ans}=S.cur;
+  const td=denom(to);
+  // 顯示空槽區
+  const ta=document.getElementById('toArea');
+  ta.style.visibility='visible';
+  ta.style.transition='opacity .3s';
+  ta.style.opacity='1';
+  await delay(200);
+  for(let i=0;i<ans;i++){
+    await delay(150);
+    const slot=document.getElementById('slot'+i);
+    if(!slot)continue;
+    slot.classList.add('filled');
+    const el=makeDenomEl(to,'xs');
+    if(td.type==='coin'){el.style.width='40px';el.style.height='40px';}
+    slot.appendChild(el);
+    sfxCoin(i);
+  }
+  await delay(300);
+  const eq=document.getElementById('eqBox');
+  eq.textContent=`${from} = ${ans} × ${to}`;
+  eq.style.display='block';
+  sfxCoin(ans);
+  await delay(900);
 }
 
 /* ============================================================
@@ -758,24 +943,67 @@ function handleOpt(chosen,ans,btn){
 ============================================================ */
 function startCount(){
   initAudio();sfxClick();
+  // 預先產生 6 個隨機目標（不重複）
+  COUNT_TARGETS=[];
+  while(COUNT_TARGETS.length<6){
+    const t=genCountTarget();
+    if(!COUNT_TARGETS.includes(t)) COUNT_TARGETS.push(t);
+  }
   S.selBills=[];S.countIdx=0;S.countStars=0;
   document.getElementById('countStars').textContent=0;
   loadCount();showScreen('screen-count');
 }
 function loadCount(){
-  const q=COUNT_Q[S.countIdx%COUNT_Q.length];
-  S.countTarget=q.target;S.selBills=[];
-  document.getElementById('targetNum').textContent=q.target+' 元';
+  // 超過預設題數就再隨機產生一題
+  if(S.countIdx>=COUNT_TARGETS.length){
+    COUNT_TARGETS.push(genCountTarget());
+  }
+  const target=COUNT_TARGETS[S.countIdx];
+  S.countTarget=target;S.selBills=[];
+  document.getElementById('targetNum').textContent=target+' 元';
   document.getElementById('currentNum').textContent='0';
   document.getElementById('currentNum').style.color='var(--orange)';
   document.getElementById('selPile').innerHTML='';
   const pal=document.getElementById('palette');pal.innerHTML='';
-  DENOMS.filter(d=>d.v<=q.target).forEach(d=>{
-    const wrap=document.createElement('div');wrap.className='palette-item';
-    wrap.appendChild(makeDenomEl(d.v,d.type==='bill'?'sm':'sm'));
-    const lbl=document.createElement('div');lbl.className='palette-lbl';lbl.textContent='+'+d.v;
-    wrap.appendChild(lbl);wrap.onclick=()=>addBill(d.v);pal.appendChild(wrap);
-  });
+
+  const availDenoms = DENOMS.filter(d=>d.v<=target);
+  const bills = availDenoms.filter(d=>d.type==='bill');
+  const coins = availDenoms.filter(d=>d.type==='coin');
+
+  function makeRow(items) {
+    if(!items.length) return;
+    const row=document.createElement('div');
+    row.style.cssText='display:flex;gap:8px;width:100%;align-items:flex-end;';
+    items.forEach(d=>{
+      const wrap=document.createElement('div');
+      wrap.className='palette-item';
+      wrap.style.cssText='flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;gap:4px;';
+
+      // 響應式貨幣圖示
+      if(d.type==='bill'){
+        const imgWrap=document.createElement('div');
+        imgWrap.style.cssText='width:100%;border-radius:6px;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.28);background:#eee;';
+        const img=document.createElement('img');
+        img.src=`imgs/${d.v}.jpg`;img.alt=d.label;
+        img.style.cssText='width:100%;height:auto;display:block;';
+        imgWrap.appendChild(img);wrap.appendChild(imgWrap);
+      } else {
+        const imgWrap=document.createElement('div');
+        imgWrap.style.cssText='width:100%;aspect-ratio:1/1;border-radius:50%;overflow:hidden;box-shadow:0 3px 10px rgba(0,0,0,.28);';
+        const img=document.createElement('img');
+        img.src=`imgs/${d.v}.jpg`;img.alt=d.label;
+        img.style.cssText=d.v===50?'width:200%;height:100%;object-fit:cover;object-position:left center;display:block;':'width:100%;height:100%;object-fit:cover;display:block;';
+        imgWrap.appendChild(img);wrap.appendChild(imgWrap);
+      }
+
+      const lbl=document.createElement('div');lbl.className='palette-lbl';lbl.textContent='+'+d.v;
+      wrap.appendChild(lbl);wrap.onclick=()=>addBill(d.v);row.appendChild(wrap);
+    });
+    pal.appendChild(row);
+  }
+
+  makeRow(bills);
+  makeRow(coins);
 }
 function addBill(v){
   initAudio();S.selBills.push(v);
@@ -818,7 +1046,10 @@ function celebrate(ok,sub){
   document.getElementById('celebEmoji').textContent=ok?EMOJIS[Math.floor(Math.random()*EMOJIS.length)]:'😊';
   document.getElementById('celebTitle').textContent=ok?TITLES[Math.floor(Math.random()*TITLES.length)]:'繼續加油！';
   document.getElementById('celebSub').textContent=sub;
-  document.getElementById('celebration').classList.add('active');
+  const celebEl=document.getElementById('celebration');
+  celebEl.classList.add('active');
+  twemoji.parse(celebEl,{folder:'svg',ext:'.svg',
+    attributes:()=>({style:'width:1.4em;height:1.4em;vertical-align:-0.2em;object-fit:contain;'})});
   if(ok){sfxCelebrate();spawnConfetti();}
 }
 function nextChallenge(){
@@ -844,6 +1075,26 @@ function spawnConfetti(){
     document.body.appendChild(p);setTimeout(()=>p.remove(),4000);
   }
 }
+</script>
+
+<script>
+  // 禁止 iOS Safari pinch-to-zoom（iOS 10+ 忽略 viewport user-scalable）
+  document.addEventListener('gesturestart', function(e){ e.preventDefault(); });
+  document.addEventListener('gesturechange', function(e){ e.preventDefault(); });
+  document.addEventListener('gestureend', function(e){ e.preventDefault(); });
+  // 記錄觸碰起點，用來判斷滑動方向
+  let _touchStartY = 0;
+  document.addEventListener('touchstart', function(e){
+    _touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+  document.addEventListener('touchmove', function(e){
+    // 多指（pinch）一律阻擋
+    if (e.touches.length > 1) { e.preventDefault(); return; }
+    // 只在頁面頂端、且手指往下拉時才阻擋（避免 pull-to-refresh）
+    const scrollTop = document.scrollingElement ? document.scrollingElement.scrollTop : 0;
+    const movingDown = e.touches[0].clientY > _touchStartY;
+    if (scrollTop === 0 && movingDown) { e.preventDefault(); }
+  }, { passive: false });
 </script>
 </body>
 </html>

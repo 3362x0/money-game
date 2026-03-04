@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 <title>小小換錢王 💰</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@2/dist/lottie-player.js"></script>
 <!-- OpenMoji: 輕量自製 parser，無需額外 JS library -->
 <style>
 :root {
@@ -44,8 +45,8 @@ body{
 
 /* Welcome */
 #screen-welcome{justify-content:center;text-align:center;gap:22px;position:relative;z-index:1;}
-.mascot{font-size:88px;animation:mascotBounce 1.8s ease-in-out infinite;display:block;line-height:1;}
-.mascot img{width:88px!important;height:88px!important;vertical-align:middle!important;}
+.mascot{display:block;line-height:1;}
+.mascot lottie-player{width:120px;height:120px;}
 @keyframes mascotBounce{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-14px) rotate(4deg)}}
 .welcome-title{font-size:36px;font-weight:900;color:var(--orange);text-shadow:3px 3px 0 rgba(255,107,53,.18);line-height:1.15;}
 .welcome-title span{color:var(--teal);}
@@ -74,6 +75,7 @@ body{
 .menu-card.c-purple{border-color:var(--purple);}
 .menu-icon{width:52px;height:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
 .menu-icon img{width:52px;height:52px;object-fit:contain;}
+.menu-icon lottie-player{width:52px;height:52px;}
 .menu-info{flex:1;}
 .menu-title{font-size:20px;font-weight:900;white-space:nowrap;}
 .menu-desc{font-size:13px;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -192,7 +194,7 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 
 <!-- WELCOME -->
 <div class="screen active" id="screen-welcome">
-  <span class="mascot">🐷</span>
+  <span class="mascot"><lottie-player src="https://assets-v2.lottiefiles.com/a/71563cc8-71d1-11ee-86cd-3790433b0459/EKftAl4MZC.json" autoplay loop></lottie-player></span>
   <div>
     <div class="welcome-title">小小換錢王<br><span>💰 開心學台幣</span></div>
   </div>
@@ -205,17 +207,17 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 <div class="screen" id="screen-menu">
   <div class="menu-header"><h2>選擇關卡</h2><p>你想玩哪一個？</p></div>
   <div class="menu-card c-orange" onclick="startLearn()">
-    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F4D6.svg" alt="📖" class="emoji" style="width:52px;height:52px;object-fit:contain;"></div>
+    <div class="menu-icon"><lottie-player src="https://assets-v2.lottiefiles.com/a/ccb8811a-116a-11ee-9bc1-f7156a9e0cf3/psCBDdm7J5.json" autoplay loop></lottie-player></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--orange)">認識錢幣</div><div class="menu-desc">點擊看看每張鈔票是多少錢</div></div>
     <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
   </div>
   <div class="menu-card c-teal" onclick="startExchange()">
-    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F504.svg" alt="🔄" class="emoji" style="width:52px;height:52px;object-fit:contain;"></div>
+    <div class="menu-icon"><lottie-player src="https://assets-v2.lottiefiles.com/a/8d7a524c-1176-11ee-88b2-5f4ca597f138/u8qZdCQaHc.json" autoplay loop></lottie-player></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--teal)">換換看</div><div class="menu-desc">大鈔可以換幾張小鈔？</div></div>
     <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
   </div>
   <div class="menu-card c-purple" onclick="startCount()">
-    <div class="menu-icon"><img src="https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/1F9EE.svg" alt="🧮" class="emoji" style="width:52px;height:52px;object-fit:contain;"></div>
+    <div class="menu-icon"><lottie-player src="https://assets-v2.lottiefiles.com/a/493f207f-eac1-4a02-a6e8-fc798d445d84/pn9NjfY8WY.json" autoplay loop></lottie-player></div>
     <div class="menu-info"><div class="menu-title" style="color:var(--purple)">算算看</div><div class="menu-desc">用鈔票硬幣湊出指定金額</div></div>
     <div style="font-size:18px;color:var(--muted)"><svg class="icon"><use href="#icon-chevron-right"/></svg></div>
   </div>

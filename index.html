@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@flaticon/flaticon-uicons@3/css/all/all.css">
 <script src="https://cdn.jsdelivr.net/npm/@lottiefiles/lottie-player@2/dist/lottie-player.js"></script>
-<!-- OpenMoji: 輕量自製 parser，無需額外 JS library -->
+<!-- icons: Flaticon Uicons (靜態) + LottieFiles (動態) -->
 <style>
 :root {
   --orange:#FF6B35; --teal:#4ECDC4; --yellow:#FFD93D;
@@ -80,11 +80,7 @@ body{
 .menu-info{flex:1;}
 .menu-title{font-size:20px;font-weight:900;white-space:nowrap;}
 .menu-desc{font-size:13px;color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-/* OpenMoji emoji img */
-img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
-.mascot img.emoji{width:88px!important;height:88px!important;vertical-align:middle;}
-.celeb-emoji img.emoji{width:64px!important;height:64px!important;}
-.done-emoji img.emoji{width:76px!important;height:76px!important;}
+/* emoji img (OpenMoji 已移除) */
 
 /* Game header */
 .game-header{display:flex;align-items:center;width:100%;gap:12px;margin-bottom:4px;}
@@ -114,7 +110,7 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 .question-card{background:var(--white);border-radius:var(--radius);padding:20px 18px;width:100%;text-align:center;box-shadow:var(--clay-outer), var(--clay-inner);border:2px solid rgba(0,0,0,0.04);}
 .question-text{font-size:19px;font-weight:800;margin-bottom:16px;}
 .from-area{display:flex;justify-content:center;margin-bottom:12px;}
-.arrow-bounce{font-size:34px;animation:arrowPulse 1s ease-in-out infinite;margin:2px 0;}
+.arrow-bounce{font-size:32px;animation:arrowPulse 1s ease-in-out infinite;margin:2px 0;display:flex;justify-content:center;}
 @keyframes arrowPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
 .to-area{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;padding:12px;background:#F5F7FA;border-radius:var(--radius-sm);min-height:80px;align-content:flex-start;}
 .to-slot{border-radius:8px;border:2.5px dashed #ccc;background:transparent;transition:all .3s ease;}
@@ -161,8 +157,7 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 
 /* Done */
 #screen-done{justify-content:center;text-align:center;gap:22px;position:relative;z-index:1;}
-.done-emoji{font-size:80px;animation:mascotBounce 2s infinite;line-height:1;}
-.done-emoji img{width:80px!important;height:80px!important;vertical-align:middle!important;}
+.done-emoji{display:flex;justify-content:center;}
 .done-title{font-size:34px;font-weight:900;color:var(--orange);}
 .done-sub{font-size:18px;font-weight:700;color:var(--muted);}
 .welcome-hint{font-size:13px;color:#bbb;font-weight:700;}
@@ -225,12 +220,12 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 <div class="screen" id="screen-learn">
   <div class="game-header">
     <button class="btn-back" onclick="goMenu()"><i class="fi fi-rr-arrow-left icon"></i></button>
-    <div style="font-size:20px;font-weight:900;flex:1;text-align:center">認識錢幣 📖</div>
+    <div style="font-size:20px;font-weight:900;flex:1;text-align:center">認識錢幣</div>
     <div style="width:44px"></div>
   </div>
   <div style="font-size:15px;font-weight:700;color:var(--muted);text-align:center">點一下聽聽看！</div>
   <div class="learn-grid" id="learnGrid"></div>
-  <div class="learn-tip" id="learnTip">點擊上方任何一個錢幣 👆</div>
+  <div class="learn-tip" id="learnTip">點擊上方任何一個錢幣 <i class="fi fi-rr-hand-pointer icon"></i></div>
 </div>
 
 <!-- EXCHANGE GAME -->
@@ -243,11 +238,11 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
   <div class="question-card" id="phaseShow">
     <div class="question-text" id="qText">loading…</div>
     <div class="from-area"><div id="fromBill"></div></div>
-    <div class="arrow-bounce">⬇️</div>
+    <div class="arrow-bounce"><i class="fi fi-rr-arrow-down icon"></i></div>
     <div class="to-area" id="toArea"></div>
     <div class="equation-box" id="eqBox"></div>
   </div>
-  <button class="btn-action btn-teal" id="btnExchange" onclick="doExchange()">✨ 換！看看能換幾個</button>
+  <button class="btn-action btn-teal" id="btnExchange" onclick="doExchange()"><i class="fi fi-rr-bolt icon"></i> 換！看看能換幾個</button>
   <div id="phaseQuiz" style="display:none;width:100%">
     <div class="question-card" style="margin-bottom:12px">
       <div class="question-text" id="quizText">剛才換了幾個？</div>
@@ -260,12 +255,12 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 <div class="screen" id="screen-count">
   <div class="game-header">
     <button class="btn-back" onclick="goMenu()"><i class="fi fi-rr-arrow-left icon"></i></button>
-    <div style="font-size:20px;font-weight:900;flex:1;text-align:center">算算看 🧮</div>
+    <div style="font-size:20px;font-weight:900;flex:1;text-align:center">算算看</div>
     <div class="stars-badge"><i class="fi fi-ss-star icon" style="color:#FFD93D"></i> <span id="countStars">0</span></div>
   </div>
   <div class="target-card"><div class="target-lbl">目標金額</div><div class="target-num" id="targetNum">—</div></div>
   <div class="current-card">現在湊了：<span class="current-num" id="currentNum">0</span> 元</div>
-  <div style="font-size:14px;font-weight:700;color:var(--muted);text-align:center">點擊下方錢幣加入 👇</div>
+  <div style="font-size:14px;font-weight:700;color:var(--muted);text-align:center">點擊下方錢幣加入 <i class="fi fi-rr-arrow-down icon"></i></div>
   <div class="palette" id="palette"></div>
   <div style="font-size:12px;font-weight:700;color:#aaa;text-align:center">已選（點一下移除）</div>
   <div class="selected-pile" id="selPile"></div>
@@ -277,10 +272,10 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 
 <!-- ALL DONE -->
 <div class="screen" id="screen-done">
-  <div class="done-emoji">🏆</div>
+  <div class="done-emoji"><lottie-player src="https://assets-v2.lottiefiles.com/a/c91264f0-c116-4547-90fa-328b7e2a0c0a/1mo3C04OXC.json" autoplay loop style="width:80px;height:80px"></lottie-player></div>
   <div class="done-title">全部過關！</div>
   <div class="done-sub" id="doneSubtitle">太棒了！</div>
-  <button class="btn-primary" onclick="goMenu()">回主選單 🏠</button>
+  <button class="btn-primary" onclick="goMenu()">回主選單 <i class="fi fi-rr-home icon"></i></button>
 </div>
 
 <!-- CELEBRATION -->
@@ -294,58 +289,9 @@ img.emoji{width:1.2em;height:1.2em;vertical-align:-0.2em;object-fit:contain;}
 </div>
 
 <script>
-/* ============================================================
-   OPENMOJI ENGINE
-   輕量自製 emoji → OpenMoji SVG 替換器（無外部 JS library）
-   CDN: cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/{CODEPOINT}.svg
-============================================================ */
-const OM_CDN = 'https://cdn.jsdelivr.net/gh/hfg-gmuend/openmoji/color/svg/';
-
-function emojiCp(s) {
-  return [...s].map(c => c.codePointAt(0).toString(16).toUpperCase()).join('-');
-}
-
-function makeEmojiImg(em, styleStr) {
-  const img = document.createElement('img');
-  img.src  = OM_CDN + emojiCp(em) + '.svg';
-  img.alt  = em;
-  img.className = 'emoji';
-  img.style.cssText = styleStr;
-  img.onerror = function() {
-    const stripped = em.replace(/[\uFE0F\uFE0E]/g, '');
-    const fallback  = OM_CDN + emojiCp(stripped) + '.svg';
-    if (img.src !== fallback) { img.src = fallback; img.onerror = null; }
-  };
-  return img;
-}
-
-const EMOJI_RE = /(?:[\u{1F1E0}-\u{1F1FF}]{2}|\p{Extended_Pictographic}(?:\uFE0F)?(?:\u20E3)?(?:\u200D(?:\p{Extended_Pictographic}(?:\uFE0F)?(?:\u20E3)?))*)/gsu;
-
-function parseEmoji(root, styleStr = 'width:1.2em;height:1.2em;vertical-align:-0.15em;object-fit:contain;display:inline-block;') {
-  if (!root) return;
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null, false);
-  const nodes = [];
-  let n;
-  while ((n = walker.nextNode())) nodes.push(n);
-  nodes.forEach(node => {
-    if (!EMOJI_RE.test(node.textContent)) return;
-    EMOJI_RE.lastIndex = 0;
-    const frag = document.createDocumentFragment();
-    let last = 0, m;
-    while ((m = EMOJI_RE.exec(node.textContent)) !== null) {
-      if (m.index > last) frag.appendChild(document.createTextNode(node.textContent.slice(last, m.index)));
-      frag.appendChild(makeEmojiImg(m[0], styleStr));
-      last = m.index + m[0].length;
-    }
-    if (last < node.textContent.length) frag.appendChild(document.createTextNode(node.textContent.slice(last)));
-    node.parentNode?.replaceChild(frag, node);
-  });
-}
-
-// 頁面載入後立即套用 OpenMoji
-document.addEventListener('DOMContentLoaded',()=>{
-  parseEmoji(document.body);
-});
+// LottieFiles URLs
+const LOTTIE_CELEB = 'https://assets-v2.lottiefiles.com/a/4d5be619-9e87-4cd1-89a8-7e186d3f51df/9fDmLhfAme.json';
+const LOTTIE_TRY   = 'https://assets-v2.lottiefiles.com/a/98c07026-1164-11ee-b134-c388a900a001/EBykzkCioq.json';
 
 /* ============================================================
    AUDIO ENGINE
@@ -775,8 +721,6 @@ function showScreen(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   const el=document.getElementById(id);
   el.classList.add('active');
-  // 套用 OpenMoji（讓所有 emoji 變成可愛圖片）
-  parseEmoji(el);
 }
 function goMenu(){
   initAudio();sfxClick();
@@ -814,7 +758,7 @@ function startLearn(){
   initAudio();sfxClick();
   const grid=document.getElementById('learnGrid');
   grid.innerHTML='';
-  document.getElementById('learnTip').textContent='點擊上方任何一個錢幣 👆';
+  document.getElementById('learnTip').innerHTML='點擊上方任何一個錢幣 <i class="fi fi-rr-hand-pointer icon"></i>';
   DENOMS.forEach(d=>{
     const card=document.createElement('div');
     card.className='learn-card';
@@ -1083,14 +1027,13 @@ function checkCount(){
    CELEBRATION
 ============================================================ */
 const TITLES=['太棒了！','答對了！','好厲害！','完美！','超強的！'];
-const EMOJIS=['🎉','🌟','🏆','🎊','✨','🎈'];
 function celebrate(ok,sub){
-  document.getElementById('celebEmoji').textContent=ok?EMOJIS[Math.floor(Math.random()*EMOJIS.length)]:'😊';
+  document.getElementById('celebEmoji').innerHTML=
+    `<lottie-player src="${ok?LOTTIE_CELEB:LOTTIE_TRY}" autoplay style="width:64px;height:64px"></lottie-player>`;
   document.getElementById('celebTitle').textContent=ok?TITLES[Math.floor(Math.random()*TITLES.length)]:'繼續加油！';
   document.getElementById('celebSub').textContent=sub;
   const celebEl=document.getElementById('celebration');
   celebEl.classList.add('active');
-  parseEmoji(celebEl,'width:1.4em;height:1.4em;vertical-align:-0.2em;object-fit:contain;display:inline-block;');
   if(ok){sfxCelebrate();spawnConfetti();}
 }
 function nextChallenge(){

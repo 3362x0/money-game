@@ -1069,9 +1069,11 @@ function spawnConfetti(){
   document.addEventListener('gestureend', function(e){ e.preventDefault(); });
   // 記錄觸碰起點，用來判斷滑動方向
   let _touchStartY = 0;
+  // touchstart：多指立即阻擋（passive: false 才能呼叫 preventDefault）
   document.addEventListener('touchstart', function(e){
+    if (e.touches.length > 1) { e.preventDefault(); return; }
     _touchStartY = e.touches[0].clientY;
-  }, { passive: true });
+  }, { passive: false });
   document.addEventListener('touchmove', function(e){
     // 多指（pinch）一律阻擋
     if (e.touches.length > 1) { e.preventDefault(); return; }
